@@ -17,7 +17,7 @@ public class TileCamera : MonoBehaviour
     public TextAsset mapData;
     public Texture2D mapTiles;
     public TextAsset mapCollisions;
-    public Tile tilePrafab;
+    public Tile tilePrefab;
 
     private void Awake()
     {
@@ -57,8 +57,33 @@ public class TileCamera : MonoBehaviour
                 }
             }
         }
-        print("Parse " + SPRITES.Length + " sprites.");
-        print("Map size: " + W + " wide by " + H + " high");
+        //print("Parse " + SPRITES.Length + " sprites.");
+        //print("Map size: " + W + " wide by " + H + " high");
+
+        ShowMap();
+    }
+
+    /// <summary>
+    /// Генерирует плитки сразу для всей карты.
+    /// </summary>
+    void ShowMap()
+    {
+        TILES = new Tile[W, H];
+
+        // Просмотреть всю карту и создать плитки, где необходимо 
+        for (int j = 0; j < H; j++)
+        {
+            for (int i = 0; i < W; i++)
+            {
+                if (MAP[i,j] != 0)
+                {
+                    Tile ti = Instantiate<Tile>(tilePrefab);
+                    ti.transform.SetParent(TILE_ANCHOR);
+                    ti.SetTile(i, j);
+                    TILES[i, j] = ti;
+                }
+            }
+        }
     }
 
     /// <summary>
