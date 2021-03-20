@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Работоспособность плитки
+/// Плитка.
 /// </summary>
 public class Tile : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class Tile : MonoBehaviour
     public int tileNum;
 
     /// <summary>
-    /// 
+    /// Установить свойство плитки.
     /// </summary>
     /// <param name="eTileNum"> Необязательный параметр </param>
     public void SetTile(int eX, int eY, int eTileNum = -1)
