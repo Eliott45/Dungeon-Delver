@@ -10,6 +10,7 @@ public class Dray : MonoBehaviour
     [Header("Set Dynamically")]
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
     private Rigidbody rigid;
+    private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down };
 
     private void Awake()
     {
@@ -25,7 +26,9 @@ public class Dray : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow)) dirHeld = 2;
         if (Input.GetKey(KeyCode.DownArrow)) dirHeld = 3;
 
-        Vector3 vel = Vector3.zero; 
+        Vector3 vel = Vector3.zero;
+
+        /*
         switch(dirHeld)
         {
             case 0:
@@ -41,6 +44,10 @@ public class Dray : MonoBehaviour
                 vel = Vector3.down;
                 break;
         }
+        */
+
+
+        if (dirHeld > -1) vel = directions[dirHeld];
 
         rigid.velocity = vel * speed;
     }
