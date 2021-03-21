@@ -10,12 +10,14 @@ public class Dray : MonoBehaviour
     [Header("Set Dynamically")]
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
     private Rigidbody rigid;
+    private Animator anim;
     private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down };
     private KeyCode[] keys = new KeyCode[] { KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow };
 
     private void Awake()
     {
-        rigid = GetComponent<Rigidbody>(); 
+        rigid = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
     }
 
     private void Update()
@@ -58,5 +60,15 @@ public class Dray : MonoBehaviour
         if (dirHeld > -1) vel = directions[dirHeld];
 
         rigid.velocity = vel * speed;
+
+        // Анимация 
+        if(dirHeld == -1)
+        {
+            anim.speed = 0;
+        } else
+        {
+            anim.CrossFade("Dray_Walk_"+dirHeld, 0); // Переключить анимациию
+            anim.speed = 1;
+        }
     }
 }
