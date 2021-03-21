@@ -685,6 +685,7 @@ GameObject:
   - component: {fileID: 2062427663}
   - component: {fileID: 2062427662}
   - component: {fileID: 2062427667}
+  - component: {fileID: 2062427668}
   m_Layer: 0
   m_Name: Skeletos
   m_TagString: Untagged
@@ -815,5 +816,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c9e96967e5d2fa42a7272b03dc752b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 1
+  health: 0
+  speed: 2
+  timeThinkMin: 1
+  timeThinkMax: 0
+  facing: 0
+  timeNextDecision: 0
+--- !u!114 &2062427668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2062427661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ec30cb7f33d13d46a525e85d259d291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
