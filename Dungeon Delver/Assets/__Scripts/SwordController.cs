@@ -9,8 +9,8 @@ public class SwordController : MonoBehaviour
 
     private void Start()
     {
-        sword = transform.Find("Sword").gameObject;
-        dray = transform.parent.GetComponent<Dray>();
+        sword = transform.Find("Sword").gameObject; // Получить объект меча
+        dray = transform.parent.GetComponent<Dray>(); 
         // Деактивировать меч
         sword.SetActive(false);
     }
