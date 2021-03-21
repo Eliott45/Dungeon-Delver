@@ -11,6 +11,12 @@ public class Tile : MonoBehaviour
     public int x;
     public int y;
     public int tileNum;
+    private BoxCollider bColl;
+
+    private void Awake()
+    {
+        bColl = GetComponent<BoxCollider>();
+    }
 
     /// <summary>
     /// Установить свойство плитки.
@@ -30,5 +36,62 @@ public class Tile : MonoBehaviour
         }
         tileNum = eTileNum;
         GetComponent<SpriteRenderer>().sprite = TileCamera.SPRITES[tileNum]; // Присвоить спрайт плитке
+
+        SetCollider();
+    }
+
+    /// <summary>
+    /// Настроить коллайдер для плитки.
+    /// </summary>
+    void SetCollider()
+    {
+        // Получить информацию о коллайдере из Collider DelverCollisions.txt
+        bColl.enabled = true;
+        char c = TileCamera.COLLISIONS[tileNum]; // Извлечь символ, определяющиий вид столконвения
+        switch (c)
+        {
+            case 'S': // Вся плитка
+                bColl.center = Vector3.zero;
+                bColl.size = Vector3.one;
+                break;
+            case 'W': // Верхняя половина
+                bColl.center = new Vector3 (0, 0.25f, 0);
+                bColl.size = new Vector3(1,0.5f,1);
+                break;
+            case 'A': // Левая половина
+                bColl.center = new Vector3(-0.25f, 0, 0);
+                bColl.size = new Vector3(0.5f, 1, 1);
+                break;
+            case 'D': // Правая половина
+                bColl.center = new Vector3(0.25f, 0, 0);
+                bColl.size = new Vector3(0.5f, 1, 1);
+                break;
+
+            //----- Дополнительные коды -----\\
+            case 'Q': // Левая верхняя четверть
+                bColl.center = new Vector3(-0.25f, 0.25f, 0);
+                bColl.size = new Vector3(0.5f, 0.5f, 1);
+                break;
+            case 'E': // Правая верхняя четверть
+                bColl.center = new Vector3(0.25f, 0.25f, 0);
+                bColl.size = new Vector3(0.5f, 0.5f, 1);
+                break;
+            case 'Z': // Левая нижняя четверть
+                bColl.center = new Vector3(-0.25f, -0.25f, 0);
+                bColl.size = new Vector3(0.5f, 0.5f, 1);
+                break;
+            case 'X': // Нижняя половина
+                bColl.center = new Vector3(0, -0.25f, 0);
+                bColl.size = new Vector3(1, 0.5f, 1);
+                break;
+            case 'С': // Правая нижняя четверть
+                bColl.center = new Vector3(0.25f, -0.25f, 0);
+                bColl.size = new Vector3(0.5f, 0.5f, 1);
+                break;
+
+            default: // Все остальное: _, |, и др.
+                bColl.enabled = false;
+                break;
+        }
     }
 }
