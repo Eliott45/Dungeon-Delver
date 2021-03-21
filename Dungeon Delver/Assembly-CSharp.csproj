@@ -64,6 +64,7 @@
     <Compile Include="Assets\__Scripts\ProtoTools\FloatingScore.cs" />
     <Compile Include="Assets\__Scripts\ProtoTools\Scoreboard.cs" />
     <Compile Include="Assets\__Scripts\Dray.cs" />
+    <Compile Include="Assets\__Scripts\SwordController.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\DelverGrappleable.txt" />
