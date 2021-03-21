@@ -11,6 +11,7 @@ public class Dray : MonoBehaviour
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
     private Rigidbody rigid;
     private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down };
+    private KeyCode[] keys = new KeyCode[] { KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow };
 
     private void Awake()
     {
@@ -21,10 +22,17 @@ public class Dray : MonoBehaviour
     {
         // Задать направление персонажу 
         dirHeld = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (Input.GetKey(keys[i])) dirHeld = i;
+        }
+
+        /*
         if (Input.GetKey(KeyCode.RightArrow)) dirHeld = 0;
         if (Input.GetKey(KeyCode.UpArrow)) dirHeld = 1;
         if (Input.GetKey(KeyCode.LeftArrow)) dirHeld = 2;
         if (Input.GetKey(KeyCode.DownArrow)) dirHeld = 3;
+        */
 
         Vector3 vel = Vector3.zero;
 
