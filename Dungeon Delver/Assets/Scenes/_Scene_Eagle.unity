@@ -430,6 +430,7 @@ MonoBehaviour:
   speed: 5
   attackDuration: 0.25
   attackDelay: 0.5
+  transitionDelay: 0.5
   dirHeld: -1
   facing: 1
   mode: 0
@@ -728,6 +729,7 @@ GameObject:
   - component: {fileID: 2062427662}
   - component: {fileID: 2062427667}
   - component: {fileID: 2062427668}
+  - component: {fileID: 2062427669}
   m_Layer: 0
   m_Name: Skeletos
   m_TagString: Untagged
@@ -881,3 +883,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keepInRoom: 1
   gridMult: 1
+--- !u!114 &2062427669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2062427661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76629dd7b3c73ce43b6b48d769b6027f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
