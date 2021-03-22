@@ -11,12 +11,22 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     public float attackDuration = 0.25f; // Продолжительность атаки
     public float attackDelay = 0.5f; // Задержка между атаками
     public float transitionDelay = 0.5f; // Задержка перехода между комнатами 
+    public int maxHealth = 10; // Уровень здоровья персонажа
 
     [Header("Set Dynamically")]
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
     public int facing = 1; // Направление движения Дрея
     public eMode mode = eMode.idle;
     public int numKeys = 0;
+
+    [SerializeField]
+    private int _health;
+
+    public int health
+    {
+        get { return _health; }
+        set { _health = value; }
+    }
 
     private float timeAtkDone = 0; // Время, когда должна завершиться анимация атаки
     private float timeAtkNext = 0; // Время, когда Дрей сможет повторить атаку
