@@ -33,6 +33,9 @@ public class Tile : MonoBehaviour
         if (eTileNum == -1) // Если параметр не был передан..
         {
             eTileNum = TileCamera.GET_MAP(x, y); //.. то он будет получен вызовом GET_MAP
+        } else
+        {
+            TileCamera.SET_MAP(x, y, eTileNum); // Заменить плитку, если необходимо
         }
         tileNum = eTileNum;
         GetComponent<SpriteRenderer>().sprite = TileCamera.SPRITES[tileNum]; // Присвоить спрайт плитке
