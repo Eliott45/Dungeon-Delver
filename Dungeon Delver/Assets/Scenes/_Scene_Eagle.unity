@@ -499,10 +499,14 @@ MonoBehaviour:
   attackDelay: 0.5
   transitionDelay: 0.5
   maxHealth: 10
+  knockbackSpeed: 10
+  knockbackDuration: 0.25
+  invincibleDuration: 0.5
   dirHeld: -1
   facing: 1
   mode: 0
   numKeys: 0
+  invincible: 0
   _health: 0
 --- !u!135 &437058507
 SphereCollider:
@@ -792,6 +796,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1372719855}
   - component: {fileID: 1372719856}
+  - component: {fileID: 1372719857}
   m_Layer: 0
   m_Name: SwordController
   m_TagString: Untagged
@@ -826,6 +831,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 056f08a1767b33a4888411b7af691457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1372719857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372719854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 420e00f5e80dfc14fa2a5f73864a1c93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 2
+  knockback: 1
 --- !u!1 &1433397485 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000013282365372, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
@@ -1416,3 +1435,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 420e00f5e80dfc14fa2a5f73864a1c93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 1
+  knockback: 1
