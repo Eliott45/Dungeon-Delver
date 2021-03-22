@@ -75,6 +75,7 @@
     <Compile Include="Assets\__Scripts\GateKeeper.cs" />
     <Compile Include="Assets\__Scripts\GuiPanel.cs" />
     <Compile Include="Assets\__Scripts\DamageEffect.cs" />
+    <Compile Include="Assets\__Scripts\PickUp.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\DelverGrappleable.txt" />
