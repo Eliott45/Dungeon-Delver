@@ -70,6 +70,7 @@
     <Compile Include="Assets\__Scripts\IFacingMover.cs" />
     <Compile Include="Assets\__Scripts\ProtoTools\Scoreboard.cs" />
     <Compile Include="Assets\__Scripts\GridMove.cs" />
+    <Compile Include="Assets\__Scripts\CamFollowDray.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\DelverGrappleable.txt" />
