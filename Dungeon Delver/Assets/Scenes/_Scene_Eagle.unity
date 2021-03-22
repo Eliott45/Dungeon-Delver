@@ -570,6 +570,7 @@ GameObject:
   - component: {fileID: 474367083}
   - component: {fileID: 474367084}
   - component: {fileID: 474367085}
+  - component: {fileID: 474367086}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -655,6 +656,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.4375, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &474367086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474367082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 420e00f5e80dfc14fa2a5f73864a1c93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 2
+  knockback: 1
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,7 +811,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1372719855}
   - component: {fileID: 1372719856}
-  - component: {fileID: 1372719857}
   m_Layer: 0
   m_Name: SwordController
   m_TagString: Untagged
@@ -831,20 +845,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 056f08a1767b33a4888411b7af691457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1372719857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1372719854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 420e00f5e80dfc14fa2a5f73864a1c93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 2
-  knockback: 1
 --- !u!1 &1433397485 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000013282365372, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
@@ -1390,8 +1390,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c9e96967e5d2fa42a7272b03dc752b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
+  maxHealth: 4
+  knockbackSpeed: 10
+  knockbackDuration: 0.25
+  invincibleDuration: 0.5
   health: 0
+  invincible: 0
+  knockback: 0
+  knockbackVel: {x: 0, y: 0, z: 0}
   speed: 2
   timeThinkMin: 1
   timeThinkMax: 0

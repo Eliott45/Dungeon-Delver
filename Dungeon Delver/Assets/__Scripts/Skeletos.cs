@@ -20,8 +20,11 @@ public class Skeletos : Enemy, IFacingMover
         inRm = GetComponent<InRoom>();
     }
 
-    private void Update()
+    override protected void Update()
     {
+        base.Update();
+        if (knockback) return;
+
         if(Time.time >= timeNextDecision) { // Если время смены направление прошло
             DecideDirection(); // Решить куда двигаться дальше
         }
