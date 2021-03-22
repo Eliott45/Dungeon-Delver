@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
     public float knockbackSpeed = 10;
     public float knockbackDuration = 0.25f;
     public float invincibleDuration = 0.5f;
+    public GameObject guranreedItemDrop = null;
 
     [Header("Set Dynamically: Enemy")]
     public float health;
@@ -93,6 +94,12 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        GameObject go;
+        if(guranreedItemDrop != null)
+        {
+            go = Instantiate<GameObject>(guranreedItemDrop);
+            go.transform.position = transform.position;
+        }
         Destroy(gameObject);
     }
 }
