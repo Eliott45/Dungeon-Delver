@@ -17,7 +17,7 @@ public class Skeletos : Enemy, IFacingMover
     protected override void Awake()
     {
         base.Awake();
-        inRm.GetComponent<InRoom>();
+        inRm = GetComponent<InRoom>();
     }
 
     private void Update()
