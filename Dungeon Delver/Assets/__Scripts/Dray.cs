@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 {
-    public enum eMode { idle, move, attack, transition };
+    public enum eMode { idle, move, attack, transition, knockback };
 
     [Header("Set in Inpector")]
     public float speed = 5f; // Скорость передвижения
@@ -12,12 +12,16 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     public float attackDelay = 0.5f; // Задержка между атаками
     public float transitionDelay = 0.5f; // Задержка перехода между комнатами 
     public int maxHealth = 10; // Уровень здоровья персонажа
+    public float knockbackSpeed = 10;
+    public float knockbackDuration = 0.25f;
+    public float invincibleDuration = 0.5f;
 
     [Header("Set Dynamically")]
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
     public int facing = 1; // Направление движения Дрея
     public eMode mode = eMode.idle;
     public int numKeys = 0;
+    public bool invincible = false;
 
     [SerializeField]
     private int _health;
@@ -33,7 +37,11 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private float transitionDone = 0;
     private Vector2 transitionPos;
+    private float knockbackDone = 0;
+    private float invincibleDone = 0;
+    private Vector3 knockbackVel;
 
+    private SpriteRenderer sRend;
     private Rigidbody rigid;
     private Animator anim;
     private InRoom inRm;
@@ -42,6 +50,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private void Awake()
     {
+        sRend = GetComponent<SpriteRenderer>();
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         inRm = GetComponent<InRoom>();
@@ -50,6 +59,15 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private void Update()
     {
+        // Проверить состояние неуязвимости и необходимость выполнить отбрасывание
+        if (invincible && Time.time > invincibleDone) invincible = false;
+        sRend.color = invincible ? Color.red : Color.white;
+        if (mode == eMode.knockback)
+        {
+            rigid.velocity = knockbackVel;
+            if (Time.time < knockbackDone) return;
+        }
+
         if(mode == eMode.transition)
         {
             rigid.velocity = Vector3.zero;
@@ -187,6 +205,42 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
                 mode = eMode.transition;
                 transitionDone = Time.time + transitionDelay;
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision coll)
+    {
+        if (invincible) return; // Выйти, если Дрей пока неуязвим
+        DamageEffect dEf = coll.gameObject.GetComponent<DamageEffect>();
+        if (dEf == null) return; // Если компонент DamageEffect отсуствует - выйти
+
+        health -= dEf.damage; // Вычесть вылечену ущерба из уровня здоровья 
+        invincible = true; // Сделать Дрея неуязвимым 
+        invincibleDone = Time.time + invincibleDuration;
+
+        if (dEf.knockback) // Выполнить отбрасывание
+        {
+            // Определить направление отбрасывания
+            Vector3 delta = transform.position - coll.transform.position;
+            if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
+            {
+                // Отбрасывание по горизонтали
+                delta.x = (delta.x > 0) ? 1 : -1;
+                delta.y = 0;
+            } else
+            {
+                // Отбрасывание по вертикали
+                delta.x = 0;
+                delta.y = (delta.y > 0) ? 1 : -1;
+            }
+
+            // Применить скорость отскока к компоненту Rigidbody
+            knockbackVel = delta * knockbackSpeed;
+            rigid.velocity = knockbackVel;
+
+            // Установить режим knockback и время прекращения отбрасывания
+            mode = eMode.knockback;
+            knockbackDone = Time.time + knockbackDuration;
         }
     }
 
