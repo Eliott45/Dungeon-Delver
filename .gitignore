@@ -1,0 +1,10 @@
+
+Dungeon Delver/.vsconfig
+
+*.meta
+
+*.suo
+
+Dungeon Delver/Library/
+
+Dungeon Delver/Temp/
