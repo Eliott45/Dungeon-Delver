@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class TileSwap
+{
+    public int tileNum;
+    public GameObject swapPrefab;
+    public GameObject guranteedItemDrop;
+    public int overrideTileNum = -1;
+}
 /// <summary>
 /// Отвечает за сохранение и извлечение всех спрайтов из изображения, а так же за чтения файла для определение местоположений плиток.
 /// </summary>
@@ -19,10 +27,19 @@ public class TileCamera : MonoBehaviour
     public Texture2D mapTiles;
     public TextAsset mapCollisions;
     public Tile tilePrefab;
+    public int defaultTileNum;
+    public List<TileSwap> tileSwaps;
+
+    private Dictionary<int, TileSwap> tileSwapDict;
+    private Transform enemyAnchor, itemAnchor;
+
 
     private void Awake()
     {
         COLLISIONS = Utils.RemoveLineEndings(mapCollisions.text);
+        PrepareTileSwapDict();
+        enemyAnchor = (new GameObject("Enemy Anchor")).transform;
+        itemAnchor = (new GameObject("Item Anchor")).transform;
         LoadMap();
     }
 
@@ -57,6 +74,7 @@ public class TileCamera : MonoBehaviour
                 {
                     MAP[i, j] = int.Parse(tileNums[i], hexNum); // hexNum - сообщает то что строка содержит 16-ный код
                 }
+                CheckTileSwaps(i, j);
             }
         }
         //print("Parse " + SPRITES.Length + " sprites.");
@@ -85,6 +103,52 @@ public class TileCamera : MonoBehaviour
                     TILES[i, j] = ti;
                 }
             }
+        }
+    }
+
+    void PrepareTileSwapDict()
+    {
+        tileSwapDict = new Dictionary<int, TileSwap>();
+        foreach (TileSwap ts in tileSwaps)
+        {
+            tileSwapDict.Add(ts.tileNum, ts);
+        }
+    }
+
+    void CheckTileSwaps(int i, int j)
+    {
+        int tNum = GET_MAP(i, j);
+        if (!tileSwapDict.ContainsKey(tNum)) return;
+        // Мы можем заменить плитку
+        TileSwap ts = tileSwapDict[tNum];
+        if (ts.swapPrefab != null)
+        {
+            GameObject go = Instantiate(ts.swapPrefab);
+            Enemy e = go.GetComponent<Enemy>();
+            if ( e != null)
+            {
+                go.transform.SetParent(enemyAnchor);
+            } else
+            {
+                go.transform.SetParent(itemAnchor);
+            }
+            go.transform.position = new Vector3(i, j, 0);
+            if(ts.guranteedItemDrop != null)
+            {
+                if (e != null)
+                {
+                    e.guranteedItemDrop = ts.guranteedItemDrop;
+                }
+            }
+        }
+
+        // Заменить другой плиткой 
+        if (ts.overrideTileNum == -1)
+        {
+            SET_MAP(i, j, defaultTileNum);
+        } else
+        {
+            SET_MAP(i, j, ts.overrideTileNum);
         }
     }
 

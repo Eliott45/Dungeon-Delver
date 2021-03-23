@@ -798,6 +798,38 @@ MonoBehaviour:
   mapCollisions: {fileID: 4900000, guid: 8c7dddc175b4444fa9bf2466a05b5324, type: 3}
   tilePrefab: {fileID: 2306187788712387891, guid: 95e1fe1e03a52454d84cd7d053541c74,
     type: 3}
+  defaultTileNum: 29
+  tileSwaps:
+  - tileNum: 192
+    swapPrefab: {fileID: 8988969490072501568, guid: db3ef15af0fa0224eb17b9d595b6a3b7,
+      type: 3}
+    guranteedItemDrop: {fileID: 0}
+    overrideTileNum: -1
+  - tileNum: 224
+    swapPrefab: {fileID: 0}
+    guranteedItemDrop: {fileID: 0}
+    overrideTileNum: -1
+  - tileNum: 232
+    swapPrefab: {fileID: 7988822464172102826, guid: 79485bd246346cc4ba504a89efc6cd97,
+      type: 3}
+    guranteedItemDrop: {fileID: 8988969490072501568, guid: db3ef15af0fa0224eb17b9d595b6a3b7,
+      type: 3}
+    overrideTileNum: -1
+  - tileNum: 193
+    swapPrefab: {fileID: 1000011084335560, guid: c0a773a79706a44f19d02f6f29101480,
+      type: 3}
+    guranteedItemDrop: {fileID: 0}
+    overrideTileNum: -1
+  - tileNum: 227
+    swapPrefab: {fileID: 1000010950105738, guid: 002d3cd572dd2425c9aeacc3340afccb,
+      type: 3}
+    guranteedItemDrop: {fileID: 0}
+    overrideTileNum: -1
+  - tileNum: 228
+    swapPrefab: {fileID: 1000010950105738, guid: 002d3cd572dd2425c9aeacc3340afccb,
+      type: 3}
+    guranteedItemDrop: {fileID: 0}
+    overrideTileNum: 96
 --- !u!114 &534669907
 MonoBehaviour:
   m_ObjectHideFlags: 0
