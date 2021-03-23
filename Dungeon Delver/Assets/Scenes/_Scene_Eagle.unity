@@ -509,6 +509,9 @@ MonoBehaviour:
   mode: 0
   numKeys: 0
   invincible: 0
+  hasGrappler: 0
+  lastSafeLoc: {x: 0, y: 0, z: 0}
+  lastSafeFacing: 0
   _health: 0
 --- !u!135 &437058507
 SphereCollider:
@@ -573,6 +576,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d50df3acd1df3a458ebf8d97f3736ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grappleSpd: 10
+  grappleLength: 7
+  grappleInLength: 0.5
+  unsafeTileHealthPenalty: 2
+  mapGrappleable: {fileID: 4900000, guid: a4d934b82ab1349819950b3eff283622, type: 3}
+  mode: 0
+  grappleTiles: 
+  unsafeTiles: 
 --- !u!1 &474367082
 GameObject:
   m_ObjectHideFlags: 0
