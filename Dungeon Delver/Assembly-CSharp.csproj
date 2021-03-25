@@ -56,10 +56,14 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\__Dungeon_Editor\EditorDestroyGameObject.cs" />
     <Compile Include="Assets\__Scripts\ProtoTools\Utils.cs" />
+    <Compile Include="Assets\__Dungeon_Editor\EditorMap.cs" />
     <Compile Include="Assets\__Scripts\Skeletos.cs" />
+    <Compile Include="Assets\__Dungeon_Editor\EditorTile.cs" />
     <Compile Include="Assets\__Scripts\Enemy.cs" />
     <Compile Include="Assets\__Scripts\SwordController.cs" />
+    <Compile Include="Assets\__Dungeon_Editor\EditorMiniMapRoom.cs" />
     <Compile Include="Assets\__Scripts\Tile.cs" />
     <Compile Include="Assets\__Scripts\Spiker.cs" />
     <Compile Include="Assets\__Scripts\TileCamera.cs" />
@@ -67,6 +71,7 @@
     <Compile Include="Assets\__Scripts\GridMove.cs" />
     <Compile Include="Assets\__Scripts\PickUp.cs" />
     <Compile Include="Assets\__Scripts\ProtoTools\PT_XMLReader.cs" />
+    <Compile Include="Assets\__Dungeon_Editor\EditorMiniMap.cs" />
     <Compile Include="Assets\__Scripts\IKeyMaster.cs" />
     <Compile Include="Assets\__Scripts\InRoom.cs" />
     <Compile Include="Assets\__Scripts\ProtoTools\FloatingScore.cs" />
@@ -77,11 +82,6 @@
     <Compile Include="Assets\__Scripts\IFacingMover.cs" />
     <Compile Include="Assets\__Scripts\ProtoTools\Scoreboard.cs" />
     <Compile Include="Assets\__Scripts\CamFollowDray.cs" />
-    <Compile Include="Assets\__Dungeon_Editor\EditorMiniMapRoom.cs" />
-    <Compile Include="Assets\__Dungeon_Editor\EditorDestroyGameObject.cs" />
-    <Compile Include="Assets\__Dungeon_Editor\EditorTile.cs" />
-    <Compile Include="Assets\__Dungeon_Editor\EditorMap.cs" />
-    <Compile Include="Assets\__Dungeon_Editor\EditorMiniMap.cs" />
     <Compile Include="Assets\__Dungeon_Editor\EditorTileSelection.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +89,7 @@
      <None Include="Assets\__Dungeon_Editor\___Instructions_for_Dungeon_Delver_Editor___.txt" />
      <None Include="Assets\Resources\DelverData_Hat.txt" />
      <None Include="Assets\Resources\DelverData.txt" />
+     <None Include="Assets\Resources\DelverData_main.txt" />
      <None Include="Assets\Resources\DelverCollisions.txt" />
     <Reference Include="UnityEngine">
       <HintPath>N:\programms\ForProgramming\2020.1.0f1\2020.2.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

@@ -14,11 +14,11 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     public int maxHealth = 10; // Уровень здоровья персонажа
     public float knockbackSpeed = 10;
     public float knockbackDuration = 0.25f;
-    public float invincibleDuration = 0.5f;
+    public float invincibleDuration = 0.5f; // Секунд неуязвимости после удара
 
     [Header("Set Dynamically")]
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
-    public int facing = 1; // Направление движения Дрея
+    public int facing = 3; // Направление движения Дрея
     public eMode mode = eMode.idle;
     public int numKeys = 0;
     public bool invincible = false;

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Spiker : MonoBehaviour {
-/*
+
     enum eMode { search, attack, retract };
 
     [Header("Set in Inspector")]
@@ -80,7 +80,7 @@ public class Spiker : MonoBehaviour {
 
                 // Test for collision with Dray
                 if ( (dray.transform.position - transform.position).magnitude < radius + drayColld.radius ) {
-                    dray.TakeDamage(dEf, transform.position);
+                    // dray.TakeDamage(dEf, transform.position);
                 }
                 break;
 
@@ -99,5 +99,4 @@ public class Spiker : MonoBehaviour {
 
         }
 	}
-*/   
 }
