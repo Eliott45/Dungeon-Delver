@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider colld)
     {
-        if (invincible) return; // Выйти, если Дрей пока неуязвим
+        if (invincible) return; // Выйти, если скелет пока неуязвим
         DamageEffect dEf = colld.gameObject.GetComponent<DamageEffect>();
 
         if (dEf == null) return; // Если компонент DamageEffect отсуствует - выйти

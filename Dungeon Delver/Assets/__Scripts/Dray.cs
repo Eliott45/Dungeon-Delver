@@ -282,6 +282,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         invincibleDone = Time.time + invincibleDuration;
     }
 
+
     // Реализация интерфейс IFacingMover
     public int GetFacing()
     {
