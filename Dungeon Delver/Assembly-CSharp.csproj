@@ -84,6 +84,7 @@
     <Compile Include="Assets\__Scripts\CamFollowDray.cs" />
     <Compile Include="Assets\__Dungeon_Editor\EditorTileSelection.cs" />
     <Compile Include="Assets\__Scripts\SwordProjectile.cs" />
+    <Compile Include="Assets\__Scripts\Bat.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\DelverGrappleable.txt" />

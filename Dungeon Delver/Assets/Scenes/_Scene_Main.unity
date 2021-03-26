@@ -1044,6 +1044,11 @@ MonoBehaviour:
       type: 3}
     guranteedItemDrop: {fileID: 0}
     overrideTileNum: -1
+  - tileNum: 225
+    swapPrefab: {fileID: 4690724724413670491, guid: 59d6f1327c8cbb64db69dd6ba5a58f37,
+      type: 3}
+    guranteedItemDrop: {fileID: 0}
+    overrideTileNum: -1
 --- !u!81 &592349933
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1424,7 +1429,7 @@ MonoBehaviour:
   numKeys: 0
   invincible: 0
   hasGrappler: 0
-  hasUpgradeSword: 1
+  hasUpgradeSword: 0
   lastSafeLoc: {x: 0, y: 0, z: 0}
   lastSafeFacing: 0
   dropingSwords: 0

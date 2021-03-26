@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Skeletos : Enemy, IFacingMover
+public class Bat : Enemy, IFacingMover
 {
-    [Header("Set in Inspector: Skeletos")]
-    public int speed = 2; // Скорость пермещение
-    public float timeThinkMin = 1f; // Минимальное время следущей смены направления
-    public float timeThinkMax = 4f; // Максимальное время следущей смены направления
+    [Header("Set in Inspector: Bat")]
+    public int speed = 4; // Скорость пермещение
+    public float timeThinkMin = 0.8f; // Минимальное время следущей смены направления
+    public float timeThinkMax = 1.5f; // Максимальное время следущей смены направления
 
-    [Header("Set Dynamically: Skeletos")]
+    [Header("Set Dynamically: Bat")]
     public int facing = 0;
     public float timeNextDecision = 0;
 
@@ -30,13 +30,15 @@ public class Skeletos : Enemy, IFacingMover
             speed = 0;
             rigid.velocity = directions[facing] * speed;
             return;
-        } else
+        }
+        else
         {
-            speed = 2;
+            speed = 4;
         }
 
 
-        if (Time.time >= timeNextDecision) { // Если время смены направление прошло
+        if (Time.time >= timeNextDecision)
+        { // Если время смены направление прошло
             DecideDirection(); // Решить куда двигаться дальше
         }
 
@@ -49,9 +51,9 @@ public class Skeletos : Enemy, IFacingMover
     void DecideDirection()
     {
         facing = Random.Range(0, 4); // Случайное направление
+        anim.CrossFade("Bat_" + facing, 0);
         timeNextDecision = Time.time + Random.Range(timeThinkMin, timeThinkMax); // Случайное время следующей смены направления
     }
-
 
     // Реализация интерфейс IFacingMover
     public int GetFacing()
