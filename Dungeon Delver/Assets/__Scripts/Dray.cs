@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 {
-    public enum eMode { idle, move, attack, transition, knockback };
+    public enum eMode { idle, move, attack, attack_2, transition, knockback };
 
     [Header("Set in Inpector")]
     public float speed = 5f; // Скорость передвижения
     public float attackDuration = 0.25f; // Продолжительность атаки
     public float attackDelay = 0.5f; // Задержка между атаками
     public float transitionDelay = 0.5f; // Задержка перехода между комнатами 
+    public float dropSwordDurationg = 0.5f;
+    public float dropSwordDelay = 1.5f;
     public int maxHealth = 10; // Уровень здоровья персонажа
     public float knockbackSpeed = 10;
     public float knockbackDuration = 0.25f;
@@ -23,8 +25,10 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     public int numKeys = 0;
     public bool invincible = false;
     public bool hasGrappler = false;
+    public bool hasUpgradeSword = false;
     public Vector3 lastSafeLoc;
     public int lastSafeFacing;
+    public bool dropingSwords = false;
 
     [SerializeField]
     private int _health;
@@ -37,6 +41,9 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private float timeAtkDone = 0; // Время, когда должна завершиться анимация атаки
     private float timeAtkNext = 0; // Время, когда Дрей сможет повторить атаку
+
+    private float timeDropDone = 0; 
+    private float timeDropNext = 0; 
 
     private float transitionDone = 0;
     private Vector2 transitionPos;
@@ -57,7 +64,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         inRm = GetComponent<InRoom>();
-        health = maxHealth;
+        health = maxHealth; // Назначить максимальное здоровье, при начале игры
         lastSafeLoc = transform.position; // Начальная позиция безопасна
         lastSafeFacing = facing;
     }
@@ -97,21 +104,30 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         */
 
         // Нажата клавиша атаки
-        if(Input.GetKeyDown(KeyCode.Z) && Time.time >= timeAtkDone) // Если нажата клавиша "Z" и прошло достаточко много времени после предыдущей атаки
+        if(Input.GetKeyDown(KeyCode.Z) && Time.time >= timeAtkDone && Time.time >= timeAtkNext ) // Если нажата клавиша "Z" и прошло достаточко много времени после предыдущей атаки
         {
             mode = eMode.attack;
             timeAtkDone = Time.time + attackDuration;
             timeAtkNext = Time.time + attackDelay;
         }
 
+        if (Input.GetKeyDown(KeyCode.C) && Time.time >= timeDropDone && hasUpgradeSword && Time.time >= timeDropNext)
+        {
+            dropingSwords = false;
+            mode = eMode.attack_2;
+            timeDropDone = Time.time + dropSwordDurationg;
+            timeDropNext = Time.time + dropSwordDelay;
+        }
+
         // Завершить атаку, если время истекло
-        if(Time.time >= timeAtkDone)
+        if (Time.time >= timeAtkDone && Time.time >= timeDropDone)
         {
             mode = eMode.idle;
         }
 
+
         // Выбрать правильный режим, если дрей не атакует
-        if (mode != eMode.attack)
+        if (mode != eMode.attack && mode != eMode.attack_2)
         {
             if (dirHeld == -1)
             {
@@ -146,6 +162,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         switch(mode)
         {
             case eMode.attack:
+            case eMode.attack_2:
                 anim.CrossFade("Dray_Attack_" + facing, 0);
                 anim.speed = 0;
                 break;
@@ -253,7 +270,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private void OnTriggerEnter(Collider colld)
     {
-        PickUp pup = colld.GetComponent<PickUp>();
+        PickUp pup = colld.GetComponent<PickUp>(); // Получить скрипт PickUp
         if (pup == null) return;
 
         switch(pup.itemType)
@@ -266,6 +283,9 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
                 break;  
             case PickUp.eType.grappler:
                 hasGrappler = true;
+                break;
+            case PickUp.eType.upgrade_sword:
+                hasUpgradeSword = true;
                 break;
         }
 

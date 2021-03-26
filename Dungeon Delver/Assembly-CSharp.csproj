@@ -83,13 +83,14 @@
     <Compile Include="Assets\__Scripts\ProtoTools\Scoreboard.cs" />
     <Compile Include="Assets\__Scripts\CamFollowDray.cs" />
     <Compile Include="Assets\__Dungeon_Editor\EditorTileSelection.cs" />
+    <Compile Include="Assets\__Scripts\SwordProjectile.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\DelverGrappleable.txt" />
      <None Include="Assets\__Dungeon_Editor\___Instructions_for_Dungeon_Delver_Editor___.txt" />
      <None Include="Assets\Resources\DelverData_Hat.txt" />
      <None Include="Assets\Resources\DelverData.txt" />
-     <None Include="Assets\Resources\DelverData_main.txt" />
+     <None Include="Assets\Resources\DelverData_Main.txt" />
      <None Include="Assets\Resources\DelverCollisions.txt" />
     <Reference Include="UnityEngine">
       <HintPath>N:\programms\ForProgramming\2020.1.0f1\2020.2.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Предмет.
+/// </summary>
 public class PickUp : MonoBehaviour
 {
-    public enum eType { key, health, grappler}
+    /// <summary>
+    /// Тип предмета.
+    /// </summary>
+    public enum eType { key, health, grappler, upgrade_sword}
 
     public static float COLLIDER_DELAY = 0.5f;
 
     [Header("Set in Inspector")]
-    public eType itemType;
+    public eType itemType; // Установить тип предмета
 
     // Awake() и Activate() деактивируют коллайдер на 0.5 секунд
     private void Awake()

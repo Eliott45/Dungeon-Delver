@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c9e96967e5d2fa42a7272b03dc752b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 4
+  maxHealth: 6
   knockbackSpeed: 10
   knockbackDuration: 0.25
   invincibleDuration: 0.5
@@ -209,3 +209,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   knockback: 1
+  stun: 0
