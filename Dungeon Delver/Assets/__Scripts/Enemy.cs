@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
     public float knockbackSpeed = 10;
     public float knockbackDuration = 0.25f;
     public float invincibleDuration = 0.5f;
+    public float stunDuration = 1f;
     public GameObject[] randomItemDrops;
     public GameObject guranteedItemDrop = null;
 
@@ -21,7 +22,9 @@ public class Enemy : MonoBehaviour
     public float health;
     public bool invincible = false;
     public bool knockback = false;
+    public bool stun = false; // Наличие шока (оглушение)
 
+    private float stunDone = 0;
     private float invincibleDone = 0;
     private float knockbackDone = 0;
     public Vector3 knockbackVel;
@@ -32,7 +35,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Awake()
     {
-        health = maxHealth;
+        health = maxHealth; 
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         sRend = GetComponent<SpriteRenderer>();
@@ -49,20 +52,38 @@ public class Enemy : MonoBehaviour
             if (Time.time < knockbackDone) return;
         }
 
-        anim.speed = 1;
         knockback = false;
+
+        sRend.color = stun ? Color.cyan : Color.white;
+        if (stun)
+        {
+            if (Time.time < stunDone) return;
+        }
+
+        stun = false;
+
+        anim.speed = 1;
     }
 
     private void OnTriggerEnter(Collider colld)
     {
         if (invincible) return; // Выйти, если скелет пока неуязвим
-        DamageEffect dEf = colld.gameObject.GetComponent<DamageEffect>();
+        if (stun) return;
+        DamageEffect dEf = colld.gameObject.GetComponent<DamageEffect>(); // Получить из объекта скрипт DamageEffect
 
         if (dEf == null) return; // Если компонент DamageEffect отсуствует - выйти
 
+        if (dEf.stun) // Если оружие может оглушить 
+        {
+            stun = true; 
+            stunDone = Time.time + stunDuration;
+            anim.speed = 0;
+            return;
+        }
+
         health -= dEf.damage; // Вычесть вылечену ущерба из уровня здоровья 
-        if (health <= 0) Die();
-        invincible = true; // Сделать Дрея неуязвимым 
+        if (health <= 0) Die(); // Если здоровье нету, то умереть.
+        invincible = true; // Сделать врага неуязвимым 
         invincibleDone = Time.time + invincibleDuration;
 
         if (dEf.knockback) // Выполнить отбрасывание

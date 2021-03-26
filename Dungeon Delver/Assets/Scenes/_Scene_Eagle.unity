@@ -695,6 +695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 2
   knockback: 1
+  stun: 0
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,26 +859,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keepInRoom: 0
   gridMult: 1
---- !u!1 &688518746 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1000010192216986, guid: 2ad8dfa20cd58468ca3481e0c8844a75,
-    type: 3}
-  m_PrefabInstance: {fileID: 1964539065}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &688518747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688518746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 420e00f5e80dfc14fa2a5f73864a1c93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 1
-  knockback: 0
 --- !u!1 &1372719854
 GameObject:
   m_ObjectHideFlags: 0

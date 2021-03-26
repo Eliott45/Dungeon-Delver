@@ -12,6 +12,7 @@ public class Skeletos : Enemy, IFacingMover
     [Header("Set Dynamically: Skeletos")]
     public int facing = 0;
     public float timeNextDecision = 0;
+
     private InRoom inRm;
 
     protected override void Awake()
@@ -24,12 +25,22 @@ public class Skeletos : Enemy, IFacingMover
     {
         base.Update();
         if (knockback) return;
+        if (stun)
+        {
+            speed = 0;
+            rigid.velocity = directions[facing] * speed;
+            return;
+        } else
+        {
+            speed = 2;
+        }
 
-        if(Time.time >= timeNextDecision) { // Если время смены направление прошло
+
+        if (Time.time >= timeNextDecision) { // Если время смены направление прошло
             DecideDirection(); // Решить куда двигаться дальше
         }
-        // Поле rigid унаследовано от класса Enemy и инициализируется в Enemy.Awake()
-        rigid.velocity = directions[facing] * speed;
+
+        rigid.velocity = directions[facing] * speed;  // Поле rigid унаследовано от класса Enemy и инициализируется в Enemy.Awake()
     }
 
     /// <summary>
@@ -40,6 +51,7 @@ public class Skeletos : Enemy, IFacingMover
         facing = Random.Range(0, 4); // Случайное направление
         timeNextDecision = Time.time + Random.Range(timeThinkMin, timeThinkMax); // Случайное время следующей смены направления
     }
+
 
     // Реализация интерфейс IFacingMover
     public int GetFacing()

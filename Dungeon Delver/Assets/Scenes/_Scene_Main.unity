@@ -223,6 +223,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1274709822}
     m_Modifications:
+    - target: {fileID: 191490038, guid: 2ad8dfa20cd58468ca3481e0c8844a75, type: 3}
+      propertyPath: stun
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1000010192216986, guid: 2ad8dfa20cd58468ca3481e0c8844a75, type: 3}
       propertyPath: m_Name
       value: Grappler
@@ -279,26 +283,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 191490035}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &191490037 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1000010192216986, guid: 2ad8dfa20cd58468ca3481e0c8844a75,
-    type: 3}
-  m_PrefabInstance: {fileID: 191490035}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &191490038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 191490037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 420e00f5e80dfc14fa2a5f73864a1c93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 1
-  knockback: 0
 --- !u!1001 &303066593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -691,6 +675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 2
   knockback: 1
+  stun: 0
 --- !u!65 &513776788
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1199,7 +1184,7 @@ MonoBehaviour:
   mode: 0
   numKeys: 0
   invincible: 0
-  hasGrappler: 0
+  hasGrappler: 1
   lastSafeLoc: {x: 0, y: 0, z: 0}
   lastSafeFacing: 0
   _health: 0
