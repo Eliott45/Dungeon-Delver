@@ -15,14 +15,20 @@ public class Enemy : MonoBehaviour
     public float knockbackDuration = 0.25f;
     public float invincibleDuration = 0.5f;
     public float stunDuration = 1f;
+    public float dieDuration = 1f;
     public GameObject[] randomItemDrops;
     public GameObject guranteedItemDrop = null;
+
+    [Header("Set in Inspector: Enemy sounds")]
+    public AudioClip damageReceivedSn;
+    public AudioClip dieSn;
 
     [Header("Set Dynamically: Enemy")]
     public float health;
     public bool invincible = false;
     public bool knockback = false;
     public bool stun = false; // Наличие шока (оглушение)
+    public bool dead = false;
 
     private float stunDone = 0;
     private float invincibleDone = 0;
@@ -32,10 +38,12 @@ public class Enemy : MonoBehaviour
     protected Animator anim;
     protected Rigidbody rigid;
     protected SpriteRenderer sRend;
+    protected AudioSource aud;
 
     protected virtual void Awake()
     {
-        health = maxHealth; 
+        health = maxHealth;
+        aud = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         sRend = GetComponent<SpriteRenderer>();
@@ -46,7 +54,7 @@ public class Enemy : MonoBehaviour
         // Проверить состояние неуязвимости и необходимость выполнить отскок
         if (invincible && Time.time > invincibleDone) invincible = false;
         sRend.color = invincible ? Color.red : Color.white;
-        if (knockback)
+        if (knockback && rigid != null)
         {
             rigid.velocity = knockbackVel;
             if (Time.time < knockbackDone) return;
@@ -80,9 +88,18 @@ public class Enemy : MonoBehaviour
             anim.speed = 0;
             return;
         }
-
+        aud.PlayOneShot(damageReceivedSn);
         health -= dEf.damage; // Вычесть вылечену ущерба из уровня здоровья 
-        if (health <= 0) Die(); // Если здоровье нету, то умереть.
+        if (health <= 0) { // Если здоровье нету, то умереть.
+            aud.PlayOneShot(dieSn);
+            knockbackDone = Time.time + dieDuration;
+            invincibleDone = Time.time + dieDuration;
+            GetComponent<SphereCollider>().enabled = false;
+            invincible = true;
+            knockback = true;
+            Invoke("Die", dieDuration);
+            return;
+        }
         invincible = true; // Сделать врага неуязвимым 
         invincibleDone = Time.time + invincibleDuration;
 

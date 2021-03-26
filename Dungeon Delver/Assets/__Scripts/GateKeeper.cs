@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GateKeeper : MonoBehaviour
 {
+    public AudioClip unlockDoorSd;
+
+    private AudioSource aud;
+
     //----- Иднексы плиток с запертыми дверьми
     const int lockedR = 95;
     const int lockedUR = 81;
@@ -24,6 +28,7 @@ public class GateKeeper : MonoBehaviour
 
     private void Awake()
     {
+        aud = GetComponent<AudioSource>();
         keys = GetComponent<IKeyMaster>();
     }
 
@@ -77,6 +82,7 @@ public class GateKeeper : MonoBehaviour
             default:
                 return; // Выйти, чтобы исключить уменьшение счетчика ключей
         }
+        aud.PlayOneShot(unlockDoorSd);
         keys.keyCount--;
     }
 

@@ -6,11 +6,11 @@ public class Skeletos : Enemy, IFacingMover
 {
     [Header("Set in Inspector: Skeletos")]
     public int speed = 2; // Скорость пермещение
-    public float timeThinkMin = 1f; // Минимальное время следущей смены направления
-    public float timeThinkMax = 4f; // Максимальное время следущей смены направления
+    public float timeThinkMin = 1f; // Минимальное время следующей смены направления
+    public float timeThinkMax = 4f; // Максимальное время следующей смены направления
 
     [Header("Set Dynamically: Skeletos")]
-    public int facing = 0;
+    public int facing = 0; // Направление
     public float timeNextDecision = 0;
 
     private InRoom inRm;
