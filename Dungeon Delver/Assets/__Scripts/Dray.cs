@@ -33,6 +33,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     [Header("Set in Inspector: UI")]
     public GameObject deathScreen;
     public GameObject pauseScreen;
+    public GameObject tips;
 
     [Header("Set Dynamically")]
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
@@ -56,6 +57,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     }
 
     private bool pause = false;
+    private bool tipsShowing = false;
 
     private float timeAtkDone = 0; // Время, когда должна завершиться анимация атаки
     private float timeAtkNext = 0; // Время, когда Дрей сможет повторить атаку
@@ -153,6 +155,11 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
             pauseScreen.SetActive(pause);
         }
 
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            tipsShowing = !tipsShowing;
+            tips.SetActive(tipsShowing);
+        }
 
         // Завершить атаку, если время истекло
         if (Time.time >= timeAtkDone && Time.time >= timeDropDone)
