@@ -1054,6 +1054,11 @@ MonoBehaviour:
       type: 3}
     guranteedItemDrop: {fileID: 0}
     overrideTileNum: -1
+  - tileNum: 226
+    swapPrefab: {fileID: 3075444788874165889, guid: cac1e54bfbbf0aa4db956f3a7d88a51e,
+      type: 3}
+    guranteedItemDrop: {fileID: 0}
+    overrideTileNum: -1
 --- !u!81 &592349933
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1436,7 +1441,6 @@ MonoBehaviour:
   upgradeSn: {fileID: 8300000, guid: 8e13b602f74f6524c9161fd2a8a856ad, type: 3}
   fallSn: {fileID: 8300000, guid: 90d56ae5d35329a40bb807584d9b4a81, type: 3}
   switchDoorSn: {fileID: 8300000, guid: 53fbcdcbac99fa94b80c530fb3d04992, type: 3}
-  walkSn: {fileID: 8300000, guid: 29599a4ccda83a940bfda1d80e9bab8c, type: 3}
   dirHeld: -1
   facing: 3
   mode: 0
@@ -1448,7 +1452,6 @@ MonoBehaviour:
   lastSafeFacing: 0
   dropingSwords: 0
   _health: 0
-  walking: 0
 --- !u!114 &1274709814
 MonoBehaviour:
   m_ObjectHideFlags: 0
