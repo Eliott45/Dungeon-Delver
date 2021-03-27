@@ -90,6 +90,7 @@
     <Compile Include="Assets\__Scripts\CamFollowDray.cs" />
     <Compile Include="Assets\__Scripts\Slime.cs" />
     <Compile Include="Assets\__Dungeon_Editor\EditorTileSelection.cs" />
+    <Compile Include="Assets\__Scripts\Exit.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\DelverGrappleable.txt" />
