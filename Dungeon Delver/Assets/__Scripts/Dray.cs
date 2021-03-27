@@ -20,11 +20,13 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     [Header("Set in Inspector: Sounds")]
     public AudioClip swordSn;
+    public AudioClip upgradeSwordSn;
     public AudioClip damageSn;
     public AudioClip healthSn;
     public AudioClip keySn;
     public AudioClip upgradeSn;
     public AudioClip fallSn;
+    public AudioClip dieSn;
     public AudioClip switchDoorSn;
 
     [Header("Set Dynamically")]
@@ -129,6 +131,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
         if (Input.GetKeyDown(KeyCode.C) && Time.time >= timeDropDone && hasUpgradeSword && Time.time >= timeDropNext)
         {
+            aud.PlayOneShot(upgradeSwordSn);
             dropingSwords = false;
             mode = eMode.attack_2;
             timeDropDone = Time.time + dropSwordDurationg;
@@ -257,6 +260,10 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
         health -= dEf.damage; // Вычесть вылечену ущерба из уровня здоровья 
         aud.PlayOneShot(damageSn);
+        if(health <= 0)
+        {
+            aud.PlayOneShot(dieSn);
+        }
         invincible = true; // Сделать Дрея неуязвимым 
         invincibleDone = Time.time + invincibleDuration;
 

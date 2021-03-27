@@ -366,12 +366,28 @@ PrefabInstance:
     - target: {fileID: 114000011822264596, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
         type: 3}
       propertyPath: m_Text
-      value: Health points
+      value: HEALTH POINTS
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011822264596, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 321898b187ccc024e92984a8fd07817c,
+        type: 3}
+    - target: {fileID: 114000011822264596, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 68
       objectReference: {fileID: 0}
     - target: {fileID: 114000011822264596, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
         type: 3}
       propertyPath: m_FontData.m_Alignment
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011822264596, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
+        type: 3}
+      propertyPath: m_FontData.m_FontStyle
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224000010121386780, guid: ef2195d4d1bab4df9ad6dc73b0faebb1,
         type: 3}
@@ -1435,11 +1451,13 @@ MonoBehaviour:
   knockbackDuration: 0.25
   invincibleDuration: 0.5
   swordSn: {fileID: 8300000, guid: e3cf1e1161553bf4a8b667d884494bbc, type: 3}
+  upgradeSwordSn: {fileID: 8300000, guid: d5c66691391335540817ded94cd5a889, type: 3}
   damageSn: {fileID: 8300000, guid: 1cb4e80c63f0050409857d4892104c50, type: 3}
   healthSn: {fileID: 8300000, guid: d2bb5c5c2728b4d4d8ca0bcd6dff4c3e, type: 3}
   keySn: {fileID: 8300000, guid: daa7fe82ba8af3149a1b2d3567cc911a, type: 3}
   upgradeSn: {fileID: 8300000, guid: 8e13b602f74f6524c9161fd2a8a856ad, type: 3}
   fallSn: {fileID: 8300000, guid: 90d56ae5d35329a40bb807584d9b4a81, type: 3}
+  dieSn: {fileID: 8300000, guid: d9a6205fd50f9fa4b9b129db968112a0, type: 3}
   switchDoorSn: {fileID: 8300000, guid: 53fbcdcbac99fa94b80c530fb3d04992, type: 3}
   dirHeld: -1
   facing: 3
@@ -1638,7 +1656,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.75
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
