@@ -28,4 +28,9 @@ public class Menu : MonoBehaviour
         UIOptions.SetActive(false);
     }
 
+    public void SetFullscreen(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+    }
+
 }
