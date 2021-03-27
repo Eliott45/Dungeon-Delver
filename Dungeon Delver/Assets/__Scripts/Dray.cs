@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 {
-    public enum eMode { idle, move, attack, attack_2, transition, knockback };
+    public enum eMode { idle, move, attack, attack_2, transition, knockback, dead };
 
     [Header("Set in Inpector")]
     public float speed = 5f; // Скорость передвижения
@@ -28,6 +29,9 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     public AudioClip fallSn;
     public AudioClip dieSn;
     public AudioClip switchDoorSn;
+
+    [Header("Set in Inspector: UI")]
+    public GameObject deathScreen;
 
     [Header("Set Dynamically")]
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
@@ -84,6 +88,8 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private void Update()
     {
+        if (mode == eMode.dead) return;
+
         // Проверить состояние неуязвимости и необходимость выполнить отбрасывание
         if (invincible && Time.time > invincibleDone) invincible = false;
         sRend.color = invincible ? Color.red : Color.white;
@@ -254,6 +260,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private void OnCollisionEnter(Collision coll)
     {
+        if (mode == eMode.dead) return;
         if (invincible) return; // Выйти, если Дрей пока неуязвим
         DamageEffect dEf = coll.gameObject.GetComponent<DamageEffect>();
         if (dEf == null) return; // Если компонент DamageEffect отсуствует - выйти
@@ -263,6 +270,9 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         if(health <= 0)
         {
             aud.PlayOneShot(dieSn);
+            deathScreen.SetActive(true);
+            mode = eMode.dead;
+            return;
         }
         invincible = true; // Сделать Дрея неуязвимым 
         invincibleDone = Time.time + invincibleDuration;
