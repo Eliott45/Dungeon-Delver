@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Spiker : MonoBehaviour {
-/*
+
     enum eMode { search, attack, retract };
 
     [Header("Set in Inspector")]
@@ -14,29 +14,25 @@ public class Spiker : MonoBehaviour {
     private eMode           mode = eMode.search;
     private InRoom          inRm;
     private Dray            dray;
-    private SphereCollider  drayColld;
     private Vector3         p0, p1;
-    private DamageEffect    dEf;
 
 	void Start () {
         inRm = GetComponent<InRoom>();
 
         GameObject go = GameObject.Find("Dray");
         dray = go.GetComponent<Dray>();
-        drayColld = go.GetComponent<SphereCollider>();
-        dEf = GetComponent<DamageEffect>();
 	}
 	
 	void Update () {
         switch (mode) {
             case eMode.search:
-                // Check whether Dray is in the same room
+                // Проверить в этой ли комнате Дрейк
                 if (dray.roomNum != inRm.roomNum) return;
 
                 float moveAmt;
                 if ( Mathf.Abs( dray.roomPos.x - inRm.roomPos.x ) < sensorRange ) {
                     // Attack Vertically
-                    moveAmt = ( InRoom.ROOM_H - (InRoom.WALL_T*2) )/2 - 1;//0.5f;
+                    moveAmt = ( InRoom.ROOM_H - (InRoom.WALL_T*2) )/2 - 1; //0.5f;
                     // The -0.5f above accounts for radius of Spiker
                     p1 = p0 = transform.position;
                     if (inRm.roomPos.y < InRoom.ROOM_H/2) {
@@ -77,11 +73,6 @@ public class Spiker : MonoBehaviour {
                     break;
                 }
                 transform.position = pos + delta;
-
-                // Test for collision with Dray
-                if ( (dray.transform.position - transform.position).magnitude < radius + drayColld.radius ) {
-                    dray.TakeDamage(dEf, transform.position);
-                }
                 break;
 
             case eMode.retract:
@@ -99,5 +90,4 @@ public class Spiker : MonoBehaviour {
 
         }
 	}
-*/   
 }
