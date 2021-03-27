@@ -88,6 +88,7 @@
     <Compile Include="Assets\__Scripts\Slime.cs" />
     <Compile Include="Assets\__Scripts\ButtonHover.cs" />
     <Compile Include="Assets\__Scripts\Menu.cs" />
+    <Compile Include="Assets\__Scripts\Volume.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\DelverGrappleable.txt" />
