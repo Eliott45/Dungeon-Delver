@@ -357,6 +357,12 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         aud.PlayOneShot(fallSn);
         invincible = true; // Сделать Дрея неуязвимым
         invincibleDone = Time.time + invincibleDuration;
+        if (health <= 0)
+        {
+            aud.PlayOneShot(dieSn);
+            deathScreen.SetActive(true);
+            mode = eMode.dead;
+        }
     }
 
 

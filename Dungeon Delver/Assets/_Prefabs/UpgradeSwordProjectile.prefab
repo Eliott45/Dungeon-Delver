@@ -144,3 +144,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   direction: 0
+  flyDuration: 1.5
+  flyDone: 0

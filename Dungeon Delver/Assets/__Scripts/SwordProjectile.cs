@@ -10,6 +10,8 @@ public class SwordProjectile : MonoBehaviour
 
     public float speed = 3f;
     public int direction;
+    public float flyDuration = 1f;
+    public float flyDone;
     private Vector3 range;
     private int cells = 0;
     private Rigidbody rigid;
@@ -18,6 +20,7 @@ public class SwordProjectile : MonoBehaviour
     {
         range = transform.position;
         rigid = GetComponent<Rigidbody>();
+        flyDone = Time.time + flyDuration;
     }
 
     private void Update()
@@ -27,7 +30,7 @@ public class SwordProjectile : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (transform.position.x > (range.x + 10) || transform.position.y > (range.y + 10) && cells > 3)
+        if (flyDone <= Time.time)
         {
             Destroy(gameObject);
         }
