@@ -33,4 +33,14 @@ public class Menu : MonoBehaviour
         Screen.fullScreen = isFullscreen;
     }
 
+    public void ShowCredits()
+    {
+        SceneManager.LoadScene("Credits");
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
 }
