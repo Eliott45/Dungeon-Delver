@@ -3124,7 +3124,7 @@ MonoBehaviour:
   numKeys: 0
   invincible: 0
   hasGrappler: 0
-  hasUpgradeSword: 1
+  hasUpgradeSword: 0
   lastSafeLoc: {x: 0, y: 0, z: 0}
   lastSafeFacing: 0
   dropingSwords: 0
