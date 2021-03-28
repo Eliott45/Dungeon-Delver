@@ -7,7 +7,7 @@ public class Grapple : MonoBehaviour
     public enum eMode { none, gOut, gInMiss, gInHit}
 
     [Header("Set in Inspector")]
-    public float grappleSpd = 10;
+    public float grappleSpd = 10; // Скорость крюка
     public float grappleLength = 7;
     public float grappleInLength = 0.5f;
     public int unsafeTileHealthPenalty = 2;

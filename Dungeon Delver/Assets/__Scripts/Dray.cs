@@ -1,30 +1,51 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 {
-    public enum eMode { idle, move, attack, transition, knockback };
+    public enum eMode { idle, move, attack, attack_2, transition, knockback, dead };
 
     [Header("Set in Inpector")]
     public float speed = 5f; // Скорость передвижения
     public float attackDuration = 0.25f; // Продолжительность атаки
     public float attackDelay = 0.5f; // Задержка между атаками
     public float transitionDelay = 0.5f; // Задержка перехода между комнатами 
+    public float dropSwordDurationg = 0.5f;
+    public float dropSwordDelay = 1.5f;
     public int maxHealth = 10; // Уровень здоровья персонажа
     public float knockbackSpeed = 10;
     public float knockbackDuration = 0.25f;
-    public float invincibleDuration = 0.5f;
+    public float invincibleDuration = 0.5f; // Секунд неуязвимости после удара
+
+    [Header("Set in Inspector: Sounds")]
+    public AudioClip swordSn;
+    public AudioClip upgradeSwordSn;
+    public AudioClip damageSn;
+    public AudioClip healthSn;
+    public AudioClip keySn;
+    public AudioClip upgradeSn;
+    public AudioClip fallSn;
+    public AudioClip dieSn;
+    public AudioClip switchDoorSn;
+
+    [Header("Set in Inspector: UI")]
+    public GameObject deathScreen;
+    public GameObject pauseScreen;
+    public GameObject tips;
 
     [Header("Set Dynamically")]
     public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
-    public int facing = 1; // Направление движения Дрея
+    public int facing = 3; // Направление движения Дрея
     public eMode mode = eMode.idle;
     public int numKeys = 0;
     public bool invincible = false;
     public bool hasGrappler = false;
+    public bool hasUpgradeSword = false;
     public Vector3 lastSafeLoc;
     public int lastSafeFacing;
+    public bool dropingSwords = false;
 
     [SerializeField]
     private int _health;
@@ -35,8 +56,14 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         set { _health = value; }
     }
 
+    private bool pause = false;
+    private bool tipsShowing = false;
+
     private float timeAtkDone = 0; // Время, когда должна завершиться анимация атаки
     private float timeAtkNext = 0; // Время, когда Дрей сможет повторить атаку
+
+    private float timeDropDone = 0; 
+    private float timeDropNext = 0; 
 
     private float transitionDone = 0;
     private Vector2 transitionPos;
@@ -48,22 +75,26 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     private Rigidbody rigid;
     private Animator anim;
     private InRoom inRm;
+    private AudioSource aud;
     private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down };
     private KeyCode[] keys = new KeyCode[] { KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow };
 
     private void Awake()
     {
+        aud = GetComponent<AudioSource>();
         sRend = GetComponent<SpriteRenderer>();
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         inRm = GetComponent<InRoom>();
-        health = maxHealth;
+        health = maxHealth; // Назначить максимальное здоровье, при начале игры
         lastSafeLoc = transform.position; // Начальная позиция безопасна
         lastSafeFacing = facing;
     }
 
     private void Update()
     {
+        if (mode == eMode.dead) return;
+
         // Проверить состояние неуязвимости и необходимость выполнить отбрасывание
         if (invincible && Time.time > invincibleDone) invincible = false;
         sRend.color = invincible ? Color.red : Color.white;
@@ -82,11 +113,15 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
             mode = eMode.idle;
         }
 
+
         //----Обработка ввода с клавиатуры и управление режимами eMode----\\
         dirHeld = -1; // Задать направление персонажу 
         for (int i = 0; i < 4; i++)
         {
-            if (Input.GetKey(keys[i])) dirHeld = i;
+            if (Input.GetKey(keys[i]))
+            {
+                dirHeld = i;
+            }
         }
 
         /*
@@ -97,21 +132,44 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         */
 
         // Нажата клавиша атаки
-        if(Input.GetKeyDown(KeyCode.Z) && Time.time >= timeAtkDone) // Если нажата клавиша "Z" и прошло достаточко много времени после предыдущей атаки
+        if(Input.GetKeyDown(KeyCode.Z) && Time.time >= timeAtkDone && Time.time >= timeAtkNext ) // Если нажата клавиша "Z" и прошло достаточко много времени после предыдущей атаки
         {
+            aud.PlayOneShot(swordSn);
             mode = eMode.attack;
             timeAtkDone = Time.time + attackDuration;
             timeAtkNext = Time.time + attackDelay;
         }
 
+        if (Input.GetKeyDown(KeyCode.C) && Time.time >= timeDropDone && hasUpgradeSword && Time.time >= timeDropNext)
+        {
+            aud.PlayOneShot(upgradeSwordSn);
+            dropingSwords = false;
+            mode = eMode.attack_2;
+            timeDropDone = Time.time + dropSwordDurationg;
+            timeDropNext = Time.time + dropSwordDelay;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pause = !pause;
+            pauseScreen.SetActive(pause);
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            tipsShowing = !tipsShowing;
+            tips.SetActive(tipsShowing);
+        }
+
         // Завершить атаку, если время истекло
-        if(Time.time >= timeAtkDone)
+        if (Time.time >= timeAtkDone && Time.time >= timeDropDone)
         {
             mode = eMode.idle;
         }
 
+
         // Выбрать правильный режим, если дрей не атакует
-        if (mode != eMode.attack)
+        if (mode != eMode.attack && mode != eMode.attack_2)
         {
             if (dirHeld == -1)
             {
@@ -146,6 +204,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         switch(mode)
         {
             case eMode.attack:
+            case eMode.attack_2:
                 anim.CrossFade("Dray_Attack_" + facing, 0);
                 anim.speed = 0;
                 break;
@@ -210,6 +269,7 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
                 lastSafeLoc = transform.position;
                 lastSafeFacing = facing;
                 mode = eMode.transition;
+                aud.PlayOneShot(switchDoorSn);
                 transitionDone = Time.time + transitionDelay;
             }
         }
@@ -217,11 +277,20 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private void OnCollisionEnter(Collision coll)
     {
+        if (mode == eMode.dead) return;
         if (invincible) return; // Выйти, если Дрей пока неуязвим
         DamageEffect dEf = coll.gameObject.GetComponent<DamageEffect>();
         if (dEf == null) return; // Если компонент DamageEffect отсуствует - выйти
 
         health -= dEf.damage; // Вычесть вылечену ущерба из уровня здоровья 
+        aud.PlayOneShot(damageSn);
+        if(health <= 0)
+        {
+            aud.PlayOneShot(dieSn);
+            deathScreen.SetActive(true);
+            mode = eMode.dead;
+            return;
+        }
         invincible = true; // Сделать Дрея неуязвимым 
         invincibleDone = Time.time + invincibleDuration;
 
@@ -253,19 +322,26 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
 
     private void OnTriggerEnter(Collider colld)
     {
-        PickUp pup = colld.GetComponent<PickUp>();
+        PickUp pup = colld.GetComponent<PickUp>(); // Получить скрипт PickUp
         if (pup == null) return;
 
         switch(pup.itemType)
         {
             case PickUp.eType.health:
                 health = Mathf.Min(health + 2, maxHealth);
+                aud.PlayOneShot(healthSn);
                 break;
             case PickUp.eType.key:
                 keyCount++;
+                aud.PlayOneShot(keySn);
                 break;  
             case PickUp.eType.grappler:
                 hasGrappler = true;
+                aud.PlayOneShot(upgradeSn);
+                break;
+            case PickUp.eType.upgrade_sword:
+                hasUpgradeSword = true;
+                aud.PlayOneShot(upgradeSn);
                 break;
         }
 
@@ -277,10 +353,18 @@ public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
         transform.position = lastSafeLoc;
         facing = lastSafeFacing;
         health -= healthLoss;
-
+        aud.PlayOneShot(damageSn);
+        aud.PlayOneShot(fallSn);
         invincible = true; // Сделать Дрея неуязвимым
         invincibleDone = Time.time + invincibleDuration;
+        if (health <= 0)
+        {
+            aud.PlayOneShot(dieSn);
+            deathScreen.SetActive(true);
+            mode = eMode.dead;
+        }
     }
+
 
     // Реализация интерфейс IFacingMover
     public int GetFacing()
