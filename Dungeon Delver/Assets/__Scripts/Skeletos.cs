@@ -13,12 +13,12 @@ public class Skeletos : Enemy, IFacingMover
     public int facing = 0; // Направление
     public float timeNextDecision = 0;
 
-    private InRoom inRm;
+    private InRoom _inRm;
 
     protected override void Awake()
     {
         base.Awake();
-        inRm = GetComponent<InRoom>();
+        _inRm = GetComponent<InRoom>();
     }
 
     override protected void Update()
@@ -59,7 +59,7 @@ public class Skeletos : Enemy, IFacingMover
         return facing;
     }
 
-    public bool moving
+    public bool Moving
     {
         get
         {
@@ -72,25 +72,25 @@ public class Skeletos : Enemy, IFacingMover
         return speed;
     }
 
-    public float gridMult
+    public float GridMult
     {
-        get { return inRm.gridMult; }
+        get { return _inRm.gridMult; }
     }
 
-    public Vector2 roomPos
+    public Vector2 RoomPos
     {
-        get { return inRm.roomPos; }
-        set { inRm.roomPos = value; }
+        get { return _inRm.RoomPos; }
+        set { _inRm.RoomPos = value; }
     }
 
-    public Vector2 roomNum
+    public Vector2 RoomNum
     {
-        get { return inRm.roomNum; }
-        set { inRm.roomNum = value; }
+        get { return _inRm.RoomNum; }
+        set { _inRm.RoomNum = value; }
     }
 
     public Vector2 GetRoomPosOnGrid(float mult = -1)
     {
-        return inRm.GetRoomPosOnGrid(mult);
+        return _inRm.GetRoomPosOnGrid(mult);
     }
 }

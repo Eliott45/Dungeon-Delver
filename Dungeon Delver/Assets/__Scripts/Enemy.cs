@@ -30,9 +30,9 @@ public class Enemy : MonoBehaviour
     public bool stun = false; // Наличие шока (оглушение)
     public bool dead = false;
 
-    private float stunDone = 0;
-    private float invincibleDone = 0;
-    private float knockbackDone = 0;
+    private float _stunDone = 0;
+    private float _invincibleDone = 0;
+    private float _knockbackDone = 0;
     public Vector3 knockbackVel;
 
     protected Animator anim;
@@ -52,12 +52,12 @@ public class Enemy : MonoBehaviour
     protected virtual void Update()
     {
         // Проверить состояние неуязвимости и необходимость выполнить отскок
-        if (invincible && Time.time > invincibleDone) invincible = false;
+        if (invincible && Time.time > _invincibleDone) invincible = false;
         sRend.color = invincible ? Color.red : Color.white;
         if (knockback && rigid != null)
         {
             rigid.velocity = knockbackVel;
-            if (Time.time < knockbackDone) return;
+            if (Time.time < _knockbackDone) return;
         }
 
         knockback = false;
@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour
         sRend.color = stun ? Color.cyan : Color.white;
         if (stun)
         {
-            if (Time.time < stunDone) return;
+            if (Time.time < _stunDone) return;
         }
 
         stun = false;
@@ -84,7 +84,7 @@ public class Enemy : MonoBehaviour
         if (dEf.stun) // Если оружие может оглушить 
         {
             stun = true; 
-            stunDone = Time.time + stunDuration;
+            _stunDone = Time.time + stunDuration;
             anim.speed = 0;
             return;
         }
@@ -92,8 +92,8 @@ public class Enemy : MonoBehaviour
         health -= dEf.damage; // Вычесть вылечену ущерба из уровня здоровья 
         if (health <= 0) { // Если здоровье нету, то умереть.
             aud.PlayOneShot(dieSn);
-            knockbackDone = Time.time + dieDuration;
-            invincibleDone = Time.time + dieDuration;
+            _knockbackDone = Time.time + dieDuration;
+            _invincibleDone = Time.time + dieDuration;
             GetComponent<SphereCollider>().enabled = false;
             invincible = true;
             knockback = true;
@@ -101,7 +101,7 @@ public class Enemy : MonoBehaviour
             return;
         }
         invincible = true; // Сделать врага неуязвимым 
-        invincibleDone = Time.time + invincibleDuration;
+        _invincibleDone = Time.time + invincibleDuration;
 
         if (dEf.knockback) // Выполнить отбрасывание
         {
@@ -126,7 +126,7 @@ public class Enemy : MonoBehaviour
 
             // Установить режим knockback и время прекращения отбрасывания
             knockback = true;
-            knockbackDone = Time.time + knockbackDuration;
+            _knockbackDone = Time.time + knockbackDuration;
             anim.speed = 0;
         }
     }

@@ -12,20 +12,20 @@ public class SwordProjectile : MonoBehaviour
     public int direction;
     public float flyDuration = 1f;
     public float flyDone;
-    private Vector3 range;
-    private int cells = 0;
-    private Rigidbody rigid;
+    private Vector3 _range;
+    private int _cells = 0;
+    private Rigidbody _rigid;
 
     private void Awake()
     {
-        range = transform.position;
-        rigid = GetComponent<Rigidbody>();
+        _range = transform.position;
+        _rigid = GetComponent<Rigidbody>();
         flyDone = Time.time + flyDuration;
     }
 
     private void Update()
     {
-        rigid.velocity = directions[direction] * speed;
+        _rigid.velocity = directions[direction] * speed;
     }
 
     private void LateUpdate()
@@ -38,7 +38,7 @@ public class SwordProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider colld)
     {
-        cells++;
+        _cells++;
         DamageEffect dEf = colld.gameObject.GetComponent<DamageEffect>(); // Получить из объекта скрипт DamageEffect
 
         if (dEf == null) return;

@@ -31,18 +31,18 @@ public class InRoom : MonoBehaviour
     {
         if(keepInRoom)
         {
-            Vector2 rPos = roomPos;
+            Vector2 rPos = RoomPos;
             // Mathf.Clamp - гарантирует, что координата будет иметь значение между минимальным значением WALL_T и максимальным значеним ROOM_W - 1 - WALL_T
             rPos.x = Mathf.Clamp(rPos.x, WALL_T, ROOM_W - 1 - WALL_T); 
             rPos.y = Mathf.Clamp(rPos.y, WALL_T, ROOM_H - 1 - WALL_T);
-            roomPos = rPos;
+            RoomPos = rPos;
         }
     }
 
     /// <summary>
     /// Узнать местоположение этого персонажа в локальных координатах комнаты.
     /// </summary>
-    public Vector2 roomPos
+    public Vector2 RoomPos
     {
         get
         {
@@ -53,7 +53,7 @@ public class InRoom : MonoBehaviour
         }
         set
         {
-            Vector2 rm = roomNum;
+            Vector2 rm = RoomNum;
             rm.x *= ROOM_W;
             rm.y *= ROOM_H;
             rm += value;
@@ -64,7 +64,7 @@ public class InRoom : MonoBehaviour
     /// <summary>
     /// Узнать в какой комнате находится этот персонаж.
     /// </summary>
-    public Vector2 roomNum
+    public Vector2 RoomNum
     {
         get
         {
@@ -75,7 +75,7 @@ public class InRoom : MonoBehaviour
         }
         set
         {
-            Vector2 rPos = roomPos;
+            Vector2 rPos = RoomPos;
             Vector2 rm = value;
             rm.x *= ROOM_W;
             rm.y *= ROOM_H;
@@ -92,7 +92,7 @@ public class InRoom : MonoBehaviour
         {
             mult = gridMult;
         }
-        Vector2 rPos = roomPos;
+        Vector2 rPos = RoomPos;
         rPos /= mult;
         rPos.x = Mathf.Round(rPos.x);
         rPos.y = Mathf.Round(rPos.y);

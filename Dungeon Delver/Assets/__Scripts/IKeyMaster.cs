@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IKeyMaster
 {
-    int keyCount { get; set; }
+    int KeyCount { get; set; }
     int GetFacing();
 }

@@ -6,36 +6,36 @@ public class SwordController : MonoBehaviour
 {
     public GameObject prefabSword;
 
-    private GameObject sword;
-    private GameObject upgradeSword;
-    private Dray dray;
+    private GameObject _sword;
+    private GameObject _upgradeSword;
+    private Dray _dray;
 
     private void Start()
     {
-        sword = transform.Find("Sword").gameObject; // Получить объект меча
-        upgradeSword = transform.Find("Upgrade_Sword").gameObject; 
-        dray = transform.parent.GetComponent<Dray>(); 
-        sword.SetActive(false); // Деактивировать меч
-        upgradeSword.SetActive(false); // Деактивировать меч
+        _sword = transform.Find("Sword").gameObject; // Получить объект меча
+        _upgradeSword = transform.Find("Upgrade_Sword").gameObject; 
+        _dray = transform.parent.GetComponent<Dray>(); 
+        _sword.SetActive(false); // Деактивировать меч
+        _upgradeSword.SetActive(false); // Деактивировать меч
     }
 
     private void Update()
     {
-        transform.rotation = Quaternion.Euler(0, 0, 90 * dray.facing);
-        sword.SetActive(dray.mode == Dray.eMode.attack);
-        upgradeSword.SetActive(dray.mode == Dray.eMode.attack_2);
-        if (dray.mode == Dray.eMode.attack_2 && !dray.dropingSwords)
+        transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);
+        _sword.SetActive(_dray.mode == Dray.eMode.attack);
+        _upgradeSword.SetActive(_dray.mode == Dray.eMode.attack_2);
+        if (_dray.mode == Dray.eMode.attack_2 && !_dray.dropingSwords)
         {
             DropSword();
-            dray.dropingSwords = true;
+            _dray.dropingSwords = true;
         }
     }
 
     void DropSword()
     {
         GameObject go = Instantiate(prefabSword);
-        go.transform.position = dray.transform.position;
-        go.GetComponent<SwordProjectile>().direction = dray.facing;
-        go.transform.rotation = Quaternion.Euler(0, 0, 90 * dray.facing);
+        go.transform.position = _dray.transform.position;
+        go.GetComponent<SwordProjectile>().direction = _dray.facing;
+        go.transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);
     }
 }

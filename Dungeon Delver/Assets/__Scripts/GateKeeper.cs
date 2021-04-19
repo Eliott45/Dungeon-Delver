@@ -6,7 +6,7 @@ public class GateKeeper : MonoBehaviour
 {
     public AudioClip unlockDoorSd;
 
-    private AudioSource aud;
+    private AudioSource _aud;
 
     //----- Иднексы плиток с запертыми дверьми
     const int lockedR = 95;
@@ -28,14 +28,14 @@ public class GateKeeper : MonoBehaviour
 
     private void Awake()
     {
-        aud = GetComponent<AudioSource>();
+        _aud = GetComponent<AudioSource>();
         keys = GetComponent<IKeyMaster>();
     }
 
     private void OnCollisionStay(Collision coll)
     {
         // Если ключей нет, можно не продолжать
-        if (keys.keyCount < 1) return;
+        if (keys.KeyCount < 1) return;
 
         // Интерес представляют только плитки
         Tile ti = coll.gameObject.GetComponent<Tile>();
@@ -82,8 +82,8 @@ public class GateKeeper : MonoBehaviour
             default:
                 return; // Выйти, чтобы исключить уменьшение счетчика ключей
         }
-        aud.PlayOneShot(unlockDoorSd);
-        keys.keyCount--;
+        _aud.PlayOneShot(unlockDoorSd);
+        keys.KeyCount--;
     }
 
 }

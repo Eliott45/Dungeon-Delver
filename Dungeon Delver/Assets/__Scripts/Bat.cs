@@ -13,27 +13,29 @@ public class Bat : Enemy, IFacingMover
     public int facing = 0;
     public float timeNextDecision = 0;
 
-    private InRoom inRm;
+    private InRoom _inRm;
+    private const int _MinSpeed = 0;
+    private const int _MaxSpeed = 4;
 
     protected override void Awake()
     {
         base.Awake();
-        inRm = GetComponent<InRoom>();
+        _inRm = GetComponent<InRoom>();
     }
 
-    override protected void Update()
+    protected override void Update()
     {
         base.Update();
         if (knockback) return; // Если скелет неуязвим 
         if (stun) // Если скелет под эфектом шока
         {
-            speed = 0;
+            speed = _MinSpeed;
             rigid.velocity = directions[facing] * speed;
             return;
         }
         else
         {
-            speed = 4;
+            speed = _MaxSpeed;
         }
 
 
@@ -61,7 +63,7 @@ public class Bat : Enemy, IFacingMover
         return facing;
     }
 
-    public bool moving
+    public bool Moving
     {
         get
         {
@@ -74,25 +76,25 @@ public class Bat : Enemy, IFacingMover
         return speed;
     }
 
-    public float gridMult
+    public float GridMult
     {
-        get { return inRm.gridMult; }
+        get { return _inRm.gridMult; }
     }
 
-    public Vector2 roomPos
+    public Vector2 RoomPos
     {
-        get { return inRm.roomPos; }
-        set { inRm.roomPos = value; }
+        get { return _inRm.RoomPos; }
+        set { _inRm.RoomPos = value; }
     }
 
-    public Vector2 roomNum
+    public Vector2 RoomNum
     {
-        get { return inRm.roomNum; }
-        set { inRm.roomNum = value; }
+        get { return _inRm.RoomNum; }
+        set { _inRm.RoomNum = value; }
     }
 
     public Vector2 GetRoomPosOnGrid(float mult = -1)
     {
-        return inRm.GetRoomPosOnGrid(mult);
+        return _inRm.GetRoomPosOnGrid(mult);
     }
 }

@@ -12,30 +12,30 @@ public class Spiker : MonoBehaviour {
     public float            radius = 0.4f;
 
     private eMode           mode = eMode.search;
-    private InRoom          inRm;
-    private Dray            dray;
+    private InRoom          _inRm;
+    private Dray            _dray;
     private Vector3         p0, p1;
 
 	void Start () {
-        inRm = GetComponent<InRoom>();
+        _inRm = GetComponent<InRoom>();
 
         GameObject go = GameObject.Find("Dray");
-        dray = go.GetComponent<Dray>();
+        _dray = go.GetComponent<Dray>();
 	}
 	
 	void Update () {
         switch (mode) {
             case eMode.search:
                 // Проверить в этой ли комнате Дрейк
-                if (dray.roomNum != inRm.roomNum) return;
+                if (_dray.RoomNum != _inRm.RoomNum) return;
 
                 float moveAmt;
-                if ( Mathf.Abs( dray.roomPos.x - inRm.roomPos.x ) < sensorRange ) {
+                if ( Mathf.Abs( _dray.RoomPos.x - _inRm.RoomPos.x ) < sensorRange ) {
                     // Attack Vertically
                     moveAmt = ( InRoom.ROOM_H - (InRoom.WALL_T*2) )/2 - 1; //0.5f;
                     // The -0.5f above accounts for radius of Spiker
                     p1 = p0 = transform.position;
-                    if (inRm.roomPos.y < InRoom.ROOM_H/2) {
+                    if (_inRm.RoomPos.y < InRoom.ROOM_H/2) {
                         p1.y += moveAmt; 
                     } else {
                         p1.y -= moveAmt;
@@ -43,11 +43,11 @@ public class Spiker : MonoBehaviour {
                     mode = eMode.attack;
                 }
 
-                if ( Mathf.Abs( dray.roomPos.y - inRm.roomPos.y ) < sensorRange ) {
+                if ( Mathf.Abs( _dray.RoomPos.y - _inRm.RoomPos.y ) < sensorRange ) {
                     // Attack Horizontally
                     moveAmt = ( InRoom.ROOM_W - (InRoom.WALL_T*2) )/2 - 1;//0.5f;
                     p1 = p0 = transform.position;
-                    if (inRm.roomPos.x < InRoom.ROOM_W/2) {
+                    if (_inRm.RoomPos.x < InRoom.ROOM_W/2) {
                         p1.x += moveAmt; 
                     } else {
                         p1.x -= moveAmt;
