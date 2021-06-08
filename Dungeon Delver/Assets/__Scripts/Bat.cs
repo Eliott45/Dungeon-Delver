@@ -5,17 +5,17 @@ namespace __Scripts
     public class Bat : Enemy, IFacingMover
     {
         [Header("Set in Inspector: Bat")]
-        public int speed = 4; // Скорость пермещение
-        public float timeThinkMin = 0.8f; // Минимальное время следущей смены направления
-        public float timeThinkMax = 1.5f; // Максимальное время следущей смены направления
+        [SerializeField] private int speed = 4; // Скорость пермещение
+        [SerializeField] private float timeThinkMin = 0.6f; // Минимальное время следущей смены направления
+        [SerializeField] private float timeThinkMax = 1.3f; // Максимальное время следущей смены направления
 
         [Header("Set Dynamically: Bat")]
-        public int facing = 0;
-        public float timeNextDecision = 0;
+        [SerializeField] private int facing ;
+        [SerializeField] private float timeNextDecision;
 
         private InRoom _inRm;
-        private const int _MinSpeed = 0;
-        private const int _MaxSpeed = 4;
+        private const int MinSpeed = 0;
+        private const int MaxSpeed = 4;
 
         protected override void Awake()
         {
@@ -29,13 +29,13 @@ namespace __Scripts
             if (knockback) return; // Если скелет неуязвим 
             if (stun) // Если скелет под эфектом шока
             {
-                speed = _MinSpeed;
+                speed = MinSpeed;
                 rigid.velocity = directions[facing] * speed;
                 return;
             }
             else
             {
-                speed = _MaxSpeed;
+                speed = MaxSpeed;
             }
 
 
@@ -63,34 +63,25 @@ namespace __Scripts
             return facing;
         }
 
-        public bool Moving
-        {
-            get
-            {
-                return (true);
-            }
-        }
+        public bool Moving => (true);
 
         public float GetSpeed()
         {
             return speed;
         }
 
-        public float GridMult
-        {
-            get { return _inRm.gridMult; }
-        }
+        public float GridMult => _inRm.gridMult;
 
         public Vector2 RoomPos
         {
-            get { return _inRm.RoomPos; }
-            set { _inRm.RoomPos = value; }
+            get => _inRm.RoomPos;
+            set => _inRm.RoomPos = value;
         }
 
         public Vector2 RoomNum
         {
-            get { return _inRm.RoomNum; }
-            set { _inRm.RoomNum = value; }
+            get => _inRm.RoomNum;
+            set => _inRm.RoomNum = value;
         }
 
         public Vector2 GetRoomPosOnGrid(float mult = -1)
