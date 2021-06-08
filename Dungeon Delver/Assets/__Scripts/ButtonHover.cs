@@ -6,7 +6,7 @@ namespace __Scripts
 {
     public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        public Color hoverColor;
+        [SerializeField] private Color hoverColor;
 
         private Text text;
         private Color standard;
