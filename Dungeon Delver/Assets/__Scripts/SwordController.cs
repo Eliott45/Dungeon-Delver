@@ -1,41 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class SwordController : MonoBehaviour
+namespace __Scripts
 {
-    public GameObject prefabSword;
-
-    private GameObject _sword;
-    private GameObject _upgradeSword;
-    private Dray _dray;
-
-    private void Start()
+    public class SwordController : MonoBehaviour
     {
-        _sword = transform.Find("Sword").gameObject; // Получить объект меча
-        _upgradeSword = transform.Find("Upgrade_Sword").gameObject; 
-        _dray = transform.parent.GetComponent<Dray>(); 
-        _sword.SetActive(false); // Деактивировать меч
-        _upgradeSword.SetActive(false); // Деактивировать меч
-    }
+        public GameObject prefabSword;
 
-    private void Update()
-    {
-        transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);
-        _sword.SetActive(_dray.mode == Dray.eMode.attack);
-        _upgradeSword.SetActive(_dray.mode == Dray.eMode.attack_2);
-        if (_dray.mode == Dray.eMode.attack_2 && !_dray.dropingSwords)
+        private GameObject _sword;
+        private GameObject _upgradeSword;
+        private Dray _dray;
+
+        private void Start()
         {
-            DropSword();
-            _dray.dropingSwords = true;
+            _sword = transform.Find("Sword").gameObject; // Получить объект меча
+            _upgradeSword = transform.Find("Upgrade_Sword").gameObject; 
+            _dray = transform.parent.GetComponent<Dray>(); 
+            _sword.SetActive(false); // Деактивировать меч
+            _upgradeSword.SetActive(false); // Деактивировать меч
         }
-    }
 
-    void DropSword()
-    {
-        GameObject go = Instantiate(prefabSword);
-        go.transform.position = _dray.transform.position;
-        go.GetComponent<SwordProjectile>().direction = _dray.facing;
-        go.transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);
+        private void Update()
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);
+            _sword.SetActive(_dray.mode == Dray.eMode.attack);
+            _upgradeSword.SetActive(_dray.mode == Dray.eMode.attack_2);
+            if (_dray.mode == Dray.eMode.attack_2 && !_dray.dropingSwords)
+            {
+                DropSword();
+                _dray.dropingSwords = true;
+            }
+        }
+
+        void DropSword()
+        {
+            GameObject go = Instantiate(prefabSword);
+            go.transform.position = _dray.transform.position;
+            go.GetComponent<SwordProjectile>().direction = _dray.facing;
+            go.transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);
+        }
     }
 }

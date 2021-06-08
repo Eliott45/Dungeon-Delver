@@ -1,54 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CamFollowDray : MonoBehaviour
+namespace __Scripts
 {
-    public static bool IsTransitioning = false;
-
-    [Header("Set in Inspector")]
-    public InRoom drayInRm;
-    public float transTime = 0.5f;
-
-    private Vector3 p0, p1;
-
-    private InRoom _inRm;
-    private float _transStart;
-
-    private void Awake()
+    public class CamFollowDray : MonoBehaviour
     {
-        _inRm = GetComponent<InRoom>(); 
-    }
+        public static bool IsTransitioning = false;
 
-    private void Update()
-    {
-        if (IsTransitioning)
+        [Header("Set in Inspector")]
+        public InRoom drayInRm;
+        public float transTime = 0.5f;
+
+        private Vector3 p0, p1;
+
+        private InRoom _inRm;
+        private float _transStart;
+
+        private void Awake()
         {
-            float u = (Time.time - _transStart) / transTime;
-            if(u>= 1)
-            {
-                u = 1;
-                IsTransitioning = false;
-            }
-            transform.position = (1 - u) * p0 + u * p1;
+            _inRm = GetComponent<InRoom>(); 
         }
-        else
+
+        private void Update()
         {
-            if(drayInRm.RoomNum != _inRm.RoomNum)
+            if (IsTransitioning)
             {
-                TransitionTo(drayInRm.RoomNum);
+                float u = (Time.time - _transStart) / transTime;
+                if(u>= 1)
+                {
+                    u = 1;
+                    IsTransitioning = false;
+                }
+                transform.position = (1 - u) * p0 + u * p1;
+            }
+            else
+            {
+                if(drayInRm.RoomNum != _inRm.RoomNum)
+                {
+                    TransitionTo(drayInRm.RoomNum);
+                }
             }
         }
-    }
 
-    void TransitionTo(Vector2 rm)
-    {
-        p0 = transform.position;
-        _inRm.RoomNum = rm;
-        p1 = transform.position + (Vector3.back * 10);
-        transform.position = p0;
+        void TransitionTo(Vector2 rm)
+        {
+            p0 = transform.position;
+            _inRm.RoomNum = rm;
+            p1 = transform.position + (Vector3.back * 10);
+            transform.position = p0;
 
-        _transStart = Time.time;
-        IsTransitioning = true;
+            _transStart = Time.time;
+            IsTransitioning = true;
+        }
     }
 }

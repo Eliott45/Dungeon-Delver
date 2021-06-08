@@ -1,15 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Exit : MonoBehaviour
+namespace __Scripts
 {
-    private void OnTriggerEnter(Collider col)
+    public class Exit : MonoBehaviour
     {
-        if (col.CompareTag("Dray"))
+        private void OnTriggerEnter(Collider col)
         {
-            SceneManager.LoadScene("Credits");
+            if (col.CompareTag("Dray"))
+            {
+                SceneManager.LoadScene("Credits");
+            }
         }
     }
 }

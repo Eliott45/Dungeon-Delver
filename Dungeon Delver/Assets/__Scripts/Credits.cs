@@ -1,15 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Credits : MonoBehaviour
+namespace __Scripts
 {
-    private void Update()
+    public class Credits : MonoBehaviour
     {
-        if (Input.GetKeyDown("escape"))
+        private void Update()
         {
-            SceneManager.LoadScene("Menu");
+            if (Input.GetKeyDown("escape"))
+            {
+                SceneManager.LoadScene("Menu");
+            }
         }
     }
 }

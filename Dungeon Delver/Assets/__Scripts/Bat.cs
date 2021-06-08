@@ -1,100 +1,101 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Bat : Enemy, IFacingMover
+namespace __Scripts
 {
-    [Header("Set in Inspector: Bat")]
-    public int speed = 4; // Скорость пермещение
-    public float timeThinkMin = 0.8f; // Минимальное время следущей смены направления
-    public float timeThinkMax = 1.5f; // Максимальное время следущей смены направления
-
-    [Header("Set Dynamically: Bat")]
-    public int facing = 0;
-    public float timeNextDecision = 0;
-
-    private InRoom _inRm;
-    private const int _MinSpeed = 0;
-    private const int _MaxSpeed = 4;
-
-    protected override void Awake()
+    public class Bat : Enemy, IFacingMover
     {
-        base.Awake();
-        _inRm = GetComponent<InRoom>();
-    }
+        [Header("Set in Inspector: Bat")]
+        public int speed = 4; // Скорость пермещение
+        public float timeThinkMin = 0.8f; // Минимальное время следущей смены направления
+        public float timeThinkMax = 1.5f; // Максимальное время следущей смены направления
 
-    protected override void Update()
-    {
-        base.Update();
-        if (knockback) return; // Если скелет неуязвим 
-        if (stun) // Если скелет под эфектом шока
+        [Header("Set Dynamically: Bat")]
+        public int facing = 0;
+        public float timeNextDecision = 0;
+
+        private InRoom _inRm;
+        private const int _MinSpeed = 0;
+        private const int _MaxSpeed = 4;
+
+        protected override void Awake()
         {
-            speed = _MinSpeed;
-            rigid.velocity = directions[facing] * speed;
-            return;
+            base.Awake();
+            _inRm = GetComponent<InRoom>();
         }
-        else
+
+        protected override void Update()
         {
-            speed = _MaxSpeed;
+            base.Update();
+            if (knockback) return; // Если скелет неуязвим 
+            if (stun) // Если скелет под эфектом шока
+            {
+                speed = _MinSpeed;
+                rigid.velocity = directions[facing] * speed;
+                return;
+            }
+            else
+            {
+                speed = _MaxSpeed;
+            }
+
+
+            if (Time.time >= timeNextDecision)
+            { // Если время смены направление прошло
+                DecideDirection(); // Решить куда двигаться дальше
+            }
+
+            rigid.velocity = directions[facing] * speed;  // Поле rigid унаследовано от класса Enemy и инициализируется в Enemy.Awake()
         }
 
-
-        if (Time.time >= timeNextDecision)
-        { // Если время смены направление прошло
-            DecideDirection(); // Решить куда двигаться дальше
-        }
-
-        rigid.velocity = directions[facing] * speed;  // Поле rigid унаследовано от класса Enemy и инициализируется в Enemy.Awake()
-    }
-
-    /// <summary>
-    /// Выбирается случайное направление, и случайное время следующей смены направления
-    /// </summary>
-    void DecideDirection()
-    {
-        facing = Random.Range(0, 4); // Случайное направление
-        anim.CrossFade("Bat_" + facing, 0);
-        timeNextDecision = Time.time + Random.Range(timeThinkMin, timeThinkMax); // Случайное время следующей смены направления
-    }
-
-    // Реализация интерфейс IFacingMover
-    public int GetFacing()
-    {
-        return facing;
-    }
-
-    public bool Moving
-    {
-        get
+        /// <summary>
+        /// Выбирается случайное направление, и случайное время следующей смены направления
+        /// </summary>
+        void DecideDirection()
         {
-            return (true);
+            facing = Random.Range(0, 4); // Случайное направление
+            anim.CrossFade("Bat_" + facing, 0);
+            timeNextDecision = Time.time + Random.Range(timeThinkMin, timeThinkMax); // Случайное время следующей смены направления
         }
-    }
 
-    public float GetSpeed()
-    {
-        return speed;
-    }
+        // Реализация интерфейс IFacingMover
+        public int GetFacing()
+        {
+            return facing;
+        }
 
-    public float GridMult
-    {
-        get { return _inRm.gridMult; }
-    }
+        public bool Moving
+        {
+            get
+            {
+                return (true);
+            }
+        }
 
-    public Vector2 RoomPos
-    {
-        get { return _inRm.RoomPos; }
-        set { _inRm.RoomPos = value; }
-    }
+        public float GetSpeed()
+        {
+            return speed;
+        }
 
-    public Vector2 RoomNum
-    {
-        get { return _inRm.RoomNum; }
-        set { _inRm.RoomNum = value; }
-    }
+        public float GridMult
+        {
+            get { return _inRm.gridMult; }
+        }
 
-    public Vector2 GetRoomPosOnGrid(float mult = -1)
-    {
-        return _inRm.GetRoomPosOnGrid(mult);
+        public Vector2 RoomPos
+        {
+            get { return _inRm.RoomPos; }
+            set { _inRm.RoomPos = value; }
+        }
+
+        public Vector2 RoomNum
+        {
+            get { return _inRm.RoomNum; }
+            set { _inRm.RoomNum = value; }
+        }
+
+        public Vector2 GetRoomPosOnGrid(float mult = -1)
+        {
+            return _inRm.GetRoomPosOnGrid(mult);
+        }
     }
 }
