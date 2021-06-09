@@ -20,9 +20,7 @@ namespace __Scripts.ProtoTools
 
         // The score property also sets the scoreString
         public int score {
-            get {
-                return(_score);
-            }
+            get => (_score);
             set {
                 _score = value;
                 scoreString = _score.ToString("N0");
@@ -31,9 +29,7 @@ namespace __Scripts.ProtoTools
 
         // The scoreString property also sets the Text.text
         public string scoreString {
-            get {
-                return(_scoreString);
-            }
+            get => (_scoreString);
             set {
                 _scoreString = value;
                 GetComponent<Text>().text = _scoreString;

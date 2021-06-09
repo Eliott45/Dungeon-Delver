@@ -31,7 +31,7 @@ namespace __Scripts
         private Vector3 p0, p1;
         private int facing;
 
-        private Vector3[] directions = new Vector3[]
+        private readonly Vector3[] directions = new Vector3[]
         {
             Vector3.right, Vector3.up, Vector3.left, Vector3.down
         };
@@ -68,7 +68,7 @@ namespace __Scripts
 
         private void Update()
         {
-            if (!dray.hasGrappler) return;
+            if (!dray.hasGrapple) return;
 
             switch(mode)
             {

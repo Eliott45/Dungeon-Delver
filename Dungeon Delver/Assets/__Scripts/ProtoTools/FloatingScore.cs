@@ -23,9 +23,7 @@ namespace __Scripts.ProtoTools
 
         // The score property sets both _score and scoreString 
         public int score {
-            get {
-                return(_score); 
-            }
+            get => (_score);
             set {
                 _score = value;
                 scoreString = _score.ToString("N0"); // "N0" adds commas to the num

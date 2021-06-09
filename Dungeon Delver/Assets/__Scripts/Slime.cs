@@ -60,34 +60,25 @@ namespace __Scripts
             return facing;
         }
 
-        public bool Moving
-        {
-            get
-            {
-                return (true);
-            }
-        }
+        public bool Moving => (true);
 
         public float GetSpeed()
         {
             return speed;
         }
 
-        public float GridMult
-        {
-            get { return _inRm.gridMult; }
-        }
+        public float GridMult => _inRm.gridMult;
 
         public Vector2 RoomPos
         {
-            get { return _inRm.RoomPos; }
-            set { _inRm.RoomPos = value; }
+            get => _inRm.RoomPos;
+            set => _inRm.RoomPos = value;
         }
 
         public Vector2 RoomNum
         {
-            get { return _inRm.RoomNum; }
-            set { _inRm.RoomNum = value; }
+            get => _inRm.RoomNum;
+            set => _inRm.RoomNum = value;
         }
 
         public Vector2 GetRoomPosOnGrid(float mult = -1)

@@ -194,29 +194,17 @@ xml["jeremy"][0].att("age");
         public ArrayList list = new ArrayList();
 
         public PT_XMLHashtable this[int s] {
-            get {
-                return(list[s] as PT_XMLHashtable);
-            }
-            set {
-                list[s] = value;
-            }
+            get => (list[s] as PT_XMLHashtable);
+            set => list[s] = value;
         }
 
         public void Add(PT_XMLHashtable eH) {
             list.Add(eH);
         }
 
-        public int Count {
-            get {
-                return(list.Count);
-            }
-        }
+        public int Count => (list.Count);
 
-        public int length {
-            get {
-                return(list.Count);
-            }
-        }
+        public int length => (list.Count);
     }
 
 
@@ -253,12 +241,8 @@ xml["jeremy"][0].att("age");
 
 
         public PT_XMLHashList this[string s] {
-            get {
-                return( Get(s) );
-            }
-            set {
-                Set( s, value );
-            }
+            get => ( Get(s) );
+            set => Set( s, value );
         }
 
         public string att(string attKey) {

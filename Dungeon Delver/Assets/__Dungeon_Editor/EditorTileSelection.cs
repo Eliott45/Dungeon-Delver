@@ -25,7 +25,7 @@ namespace __Dungeon_Editor
         public bool             selecting = false;
 
         int selectedTile {
-            get { return SELECTED_TILE; }
+            get => SELECTED_TILE;
             set {
                 _SELECTED_TILE = value;
                 _selectedTile = value;
@@ -88,10 +88,8 @@ namespace __Dungeon_Editor
         }
 
         static public int SELECTED_TILE {
-            get { return _SELECTED_TILE; }
-            set {
-                S.selectedTile = value;
-            }
+            get => _SELECTED_TILE;
+            set => S.selectedTile = value;
         }
     }
 }

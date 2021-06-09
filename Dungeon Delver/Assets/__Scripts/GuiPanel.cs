@@ -41,7 +41,7 @@ namespace __Scripts
             keyCountText.text = dray.numKeys.ToString();
 
             // Показать уровень здоровья
-            int health = dray.health;
+            int health = dray.Health;
             for (int i = 0; i < healthImages.Count; i++)
             {
                 if(health > 1)

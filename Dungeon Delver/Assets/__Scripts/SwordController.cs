@@ -22,12 +22,12 @@ namespace __Scripts
         private void Update()
         {
             transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);
-            _sword.SetActive(_dray.mode == Dray.eMode.attack);
-            _upgradeSword.SetActive(_dray.mode == Dray.eMode.attack_2);
-            if (_dray.mode == Dray.eMode.attack_2 && !_dray.dropingSwords)
+            _sword.SetActive(_dray.mode == Dray.EMode.attack);
+            _upgradeSword.SetActive(_dray.mode == Dray.EMode.attack2);
+            if (_dray.mode == Dray.EMode.attack2 && !_dray.droppingSwords)
             {
                 DropSword();
-                _dray.dropingSwords = true;
+                _dray.droppingSwords = true;
             }
         }
 

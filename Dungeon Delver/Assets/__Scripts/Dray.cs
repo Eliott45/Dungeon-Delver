@@ -1,73 +1,67 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace __Scripts
 {
     public class Dray : MonoBehaviour, IFacingMover, IKeyMaster
     {
-        public enum eMode { idle, move, attack, attack_2, transition, knockback, dead };
+        public enum EMode { idle, move, attack, attack2, transition, knockback, dead };
 
         [Header("Set in Inpector")]
-        public float speed = 5f; // Скорость передвижения
-        public float attackDuration = 0.25f; // Продолжительность атаки
-        public float attackDelay = 0.5f; // Задержка между атаками
-        public float transitionDelay = 0.5f; // Задержка перехода между комнатами 
-        public float dropSwordDurationg = 0.5f;
-        public float dropSwordDelay = 1.5f;
-        public int maxHealth = 10; // Уровень здоровья персонажа
-        public float knockbackSpeed = 10;
-        public float knockbackDuration = 0.25f;
-        public float invincibleDuration = 0.5f; // Секунд неуязвимости после удара
+        [SerializeField] private float speed = 5f; // Скорость передвижения
+        [SerializeField] private float attackDuration = 0.25f; // Продолжительность атаки
+        [SerializeField] private float attackDelay = 0.5f; // Задержка между атаками
+        [SerializeField] private float transitionDelay = 0.5f; // Задержка перехода между комнатами 
+        [SerializeField] private float dropSwordDurationg = 0.5f;
+        [SerializeField] private float dropSwordDelay = 1.5f;
+        [SerializeField] private int maxHealth = 10; // Уровень здоровья персонажа
+        [SerializeField] private float knockbackSpeed = 10;
+        [SerializeField] private float knockbackDuration = 0.25f;
+        [SerializeField] private float invincibleDuration = 0.5f; // Секунд неуязвимости после удара
 
         [Header("Set in Inspector: Sounds")]
-        public AudioClip swordSn;
-        public AudioClip upgradeSwordSn;
-        public AudioClip damageSn;
-        public AudioClip healthSn;
-        public AudioClip keySn;
-        public AudioClip upgradeSn;
-        public AudioClip fallSn;
-        public AudioClip dieSn;
-        public AudioClip switchDoorSn;
+        [SerializeField] private AudioClip swordSn;
+        [SerializeField] private AudioClip upgradeSwordSn;
+        [SerializeField] private AudioClip damageSn;
+        [SerializeField] private AudioClip healthSn;
+        [SerializeField] private AudioClip keySn;
+        [SerializeField] private AudioClip upgradeSn;
+        [SerializeField] private AudioClip fallSn;
+        [SerializeField] private AudioClip dieSn;
+        [SerializeField] private AudioClip switchDoorSn;
 
         [Header("Set in Inspector: UI")]
-        public GameObject deathScreen;
-        public GameObject pauseScreen;
-        public GameObject tips;
+        [SerializeField] private GameObject deathScreen;
+        [SerializeField] private GameObject pauseScreen;
+        [SerializeField] private GameObject tips;
 
         [Header("Set Dynamically")]
-        public int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
+        [SerializeField] private int dirHeld = -1; // Направление, соответствующее удерживаемой клавише
         public int facing = 3; // Направление движения Дрея
-        public eMode mode = eMode.idle;
-        public int numKeys = 0;
-        public bool invincible = false;
-        public bool hasGrappler = false;
-        public bool hasUpgradeSword = false;
-        public Vector3 lastSafeLoc;
-        public int lastSafeFacing;
-        public bool dropingSwords = false;
+        public EMode mode = EMode.idle;
+        public int numKeys;
+        [SerializeField] private bool invincible;
+        public bool hasGrapple;
+        [SerializeField] private bool hasUpgradeSword;
+        [SerializeField] private Vector3 lastSafeLoc;
+        [SerializeField] private int lastSafeFacing;
+        public bool droppingSwords;
 
-        [SerializeField]
-        private int _health;
+        public int Health { get; private set; }
 
-        public int health
-        {
-            get { return _health; }
-            set { _health = value; }
-        }
+        private bool _pause;
+        private bool _tipsShowing;
 
-        private bool _pause = false;
-        private bool _tipsShowing = false;
+        private float _timeAtkDone; // Время, когда должна завершиться анимация атаки
+        private float _timeAtkNext; // Время, когда Дрей сможет повторить атаку
 
-        private float _timeAtkDone = 0; // Время, когда должна завершиться анимация атаки
-        private float _timeAtkNext = 0; // Время, когда Дрей сможет повторить атаку
+        private float _timeDropDone; 
+        private float _timeDropNext; 
 
-        private float _timeDropDone = 0; 
-        private float _timeDropNext = 0; 
-
-        private float _transitionDone = 0;
+        private float _transitionDone;
         private Vector2 _transitionPos;
-        private float _knockbackDone = 0;
-        private float _invincibleDone = 0;
+        private float _knockbackDone;
+        private float _invincibleDone;
         private Vector3 _knockbackVel;
 
         private SpriteRenderer _sRend;
@@ -75,8 +69,8 @@ namespace __Scripts
         private Animator _anim;
         private InRoom _inRm;
         private AudioSource _aud;
-        private Vector3[] directions = new Vector3[] { Vector3.right, Vector3.up, Vector3.left, Vector3.down };
-        private KeyCode[] keys = new KeyCode[] { KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow };
+        private readonly Vector3[] directions = { Vector3.right, Vector3.up, Vector3.left, Vector3.down };
+        private readonly KeyCode[] keys = { KeyCode.RightArrow, KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow };
 
         private void Awake()
         {
@@ -85,56 +79,50 @@ namespace __Scripts
             _rigid = GetComponent<Rigidbody>();
             _anim = GetComponent<Animator>();
             _inRm = GetComponent<InRoom>();
-            health = maxHealth; // Назначить максимальное здоровье, при начале игры
+            Health = maxHealth; // Назначить максимальное здоровье, при начале игры
             lastSafeLoc = transform.position; // Начальная позиция безопасна
             lastSafeFacing = facing;
         }
 
         private void Update()
         {
-            if (mode == eMode.dead) return;
+            if (mode == EMode.dead) return;
 
             // Проверить состояние неуязвимости и необходимость выполнить отбрасывание
             if (invincible && Time.time > _invincibleDone) invincible = false;
             _sRend.color = invincible ? Color.red : Color.white;
-            if (mode == eMode.knockback)
+            
+            if (mode == EMode.knockback)
             {
                 _rigid.velocity = _knockbackVel;
                 if (Time.time < _knockbackDone) return;
             }
 
-            if(mode == eMode.transition)
+            if(mode == EMode.transition)
             {
                 _rigid.velocity = Vector3.zero;
                 _anim.speed = 0;
                 RoomPos = _transitionPos; // Оставить Дрея на месте
                 if (Time.time < _transitionDone) return;
-                mode = eMode.idle;
+                mode = EMode.idle;
             }
 
 
             //----Обработка ввода с клавиатуры и управление режимами eMode----\\
             dirHeld = -1; // Задать направление персонажу 
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 if (Input.GetKey(keys[i]))
                 {
                     dirHeld = i;
                 }
             }
-
-            /*
-        if (Input.GetKey(KeyCode.RightArrow)) dirHeld = 0;
-        if (Input.GetKey(KeyCode.UpArrow)) dirHeld = 1;
-        if (Input.GetKey(KeyCode.LeftArrow)) dirHeld = 2;
-        if (Input.GetKey(KeyCode.DownArrow)) dirHeld = 3;
-        */
-
+            
             // Нажата клавиша атаки
             if(Input.GetKeyDown(KeyCode.Z) && Time.time >= _timeAtkDone && Time.time >= _timeAtkNext ) // Если нажата клавиша "Z" и прошло достаточко много времени после предыдущей атаки
             {
                 _aud.PlayOneShot(swordSn);
-                mode = eMode.attack;
+                mode = EMode.attack;
                 _timeAtkDone = Time.time + attackDuration;
                 _timeAtkNext = Time.time + attackDelay;
             }
@@ -142,8 +130,8 @@ namespace __Scripts
             if (Input.GetKeyDown(KeyCode.C) && Time.time >= _timeDropDone && hasUpgradeSword && Time.time >= _timeDropNext)
             {
                 _aud.PlayOneShot(upgradeSwordSn);
-                dropingSwords = false;
-                mode = eMode.attack_2;
+                droppingSwords = false;
+                mode = EMode.attack2;
                 _timeDropDone = Time.time + dropSwordDurationg;
                 _timeDropNext = Time.time + dropSwordDelay;
             }
@@ -163,55 +151,38 @@ namespace __Scripts
             // Завершить атаку, если время истекло
             if (Time.time >= _timeAtkDone && Time.time >= _timeDropDone)
             {
-                mode = eMode.idle;
+                mode = EMode.idle;
             }
 
 
             // Выбрать правильный режим, если дрей не атакует
-            if (mode != eMode.attack && mode != eMode.attack_2)
+            if (mode != EMode.attack && mode != EMode.attack2)
             {
                 if (dirHeld == -1)
                 {
-                    mode = eMode.idle;
+                    mode = EMode.idle;
                 } else
                 {
                     facing = dirHeld;
-                    mode = eMode.move;
+                    mode = EMode.move;
                 }
             }
 
-            Vector3 vel = Vector3.zero;
-
-            /*
-        switch(dirHeld)
-        {
-            case 0:
-                vel = Vector3.right;
-                break;
-            case 1:
-                vel = Vector3.up;
-                break;
-            case 2:
-                vel = Vector3.left;
-                break;
-            case 3:
-                vel = Vector3.down;
-                break;
-        }
-        */
+            var vel = Vector3.zero;
+            
 
             switch(mode)
             {
-                case eMode.attack:
-                case eMode.attack_2:
+                case EMode.attack:
+                case EMode.attack2:
                     _anim.CrossFade("Dray_Attack_" + facing, 0);
                     _anim.speed = 0;
                     break;
-                case eMode.idle:
+                case EMode.idle:
                     _anim.CrossFade("Dray_Walk_" + facing, 0); // Переключить анимациию
                     _anim.speed = 0;
                     break;
-                case eMode.move:
+                case EMode.move:
                     vel = directions[dirHeld];
                     _anim.CrossFade("Dray_Walk_" + facing, 0);
                     _anim.speed = 1;
@@ -225,7 +196,7 @@ namespace __Scripts
         private void LateUpdate()
         {
             // Получить координаты узла сетки, с размером ячейки в половину единицы, ближайшего к данному персонажу
-            Vector2 rPos = GetRoomPosOnGrid(0.5f); // Размер ячейки в пол-единицы
+            var rPos = GetRoomPosOnGrid(0.5f); // Размер ячейки в пол-единицы
 
             // Проверить находится ли персонаж на плитке с дверью
             int doorNum;
@@ -240,7 +211,7 @@ namespace __Scripts
             if (doorNum > 3 || doorNum != facing) return;
 
             // Перейти в следующую комнату
-            Vector2 rm = RoomNum;
+            var rm = RoomNum;
             switch(doorNum)
             {
                 case 0:
@@ -258,76 +229,70 @@ namespace __Scripts
             }
 
             // Проверить, можно ли выполнить переход в комнату rm
-            if (rm.x >= 0 && rm.x <= InRoom.MAX_RM_X)
-            {
-                if(rm.y >= 0 && rm.y <= InRoom.MAX_RM_Y)
-                {
-                    RoomNum = rm;
-                    _transitionPos = InRoom.DOORS[(doorNum + 2) % 4];
-                    RoomPos = _transitionPos;
-                    lastSafeLoc = transform.position;
-                    lastSafeFacing = facing;
-                    mode = eMode.transition;
-                    _aud.PlayOneShot(switchDoorSn);
-                    _transitionDone = Time.time + transitionDelay;
-                }
-            }
+            if (!(rm.x >= 0) || !(rm.x <= InRoom.MAX_RM_X)) return;
+            if (!(rm.y >= 0) || !(rm.y <= InRoom.MAX_RM_Y)) return;
+            RoomNum = rm;
+            _transitionPos = InRoom.DOORS[(doorNum + 2) % 4];
+            RoomPos = _transitionPos;
+            lastSafeLoc = transform.position;
+            lastSafeFacing = facing;
+            mode = EMode.transition;
+            _aud.PlayOneShot(switchDoorSn);
+            _transitionDone = Time.time + transitionDelay;
         }
 
         private void OnCollisionEnter(Collision coll)
         {
-            if (mode == eMode.dead) return;
+            if (mode == EMode.dead) return;
             if (invincible) return; // Выйти, если Дрей пока неуязвим
-            DamageEffect dEf = coll.gameObject.GetComponent<DamageEffect>();
+            var dEf = coll.gameObject.GetComponent<DamageEffect>();
             if (dEf == null) return; // Если компонент DamageEffect отсуствует - выйти
 
-            health -= dEf.damage; // Вычесть вылечену ущерба из уровня здоровья 
+            Health -= dEf.damage; // Вычесть вылечену ущерба из уровня здоровья 
             _aud.PlayOneShot(damageSn);
-            if(health <= 0)
+            if(Health <= 0)
             {
                 _aud.PlayOneShot(dieSn);
                 deathScreen.SetActive(true);
-                mode = eMode.dead;
+                mode = EMode.dead;
                 return;
             }
             invincible = true; // Сделать Дрея неуязвимым 
             _invincibleDone = Time.time + invincibleDuration;
 
-            if (dEf.knockback) // Выполнить отбрасывание
+            if (!dEf.knockback) return;
+            // Определить направление отбрасывания
+            var delta = transform.position - coll.transform.position;
+            if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
             {
-                // Определить направление отбрасывания
-                Vector3 delta = transform.position - coll.transform.position;
-                if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
-                {
-                    // Отбрасывание по горизонтали
-                    delta.x = (delta.x > 0) ? 1 : -1;
-                    delta.y = 0;
-                } else
-                {
-                    // Отбрасывание по вертикали
-                    delta.x = 0;
-                    delta.y = (delta.y > 0) ? 1 : -1;
-                }
-
-                // Применить скорость отскока к компоненту Rigidbody
-                _knockbackVel = delta * knockbackSpeed;
-                _rigid.velocity = _knockbackVel;
-
-                // Установить режим knockback и время прекращения отбрасывания
-                mode = eMode.knockback;
-                _knockbackDone = Time.time + knockbackDuration;
+                // Отбрасывание по горизонтали
+                delta.x = (delta.x > 0) ? 1 : -1;
+                delta.y = 0;
+            } else
+            {
+                // Отбрасывание по вертикали
+                delta.x = 0;
+                delta.y = (delta.y > 0) ? 1 : -1;
             }
+
+            // Применить скорость отскока к компоненту Rigidbody
+            _knockbackVel = delta * knockbackSpeed;
+            _rigid.velocity = _knockbackVel;
+
+            // Установить режим knockback и время прекращения отбрасывания
+            mode = EMode.knockback;
+            _knockbackDone = Time.time + knockbackDuration;
         }
 
-        private void OnTriggerEnter(Collider colld)
+        private void OnTriggerEnter(Collider coll)
         {
-            PickUp pup = colld.GetComponent<PickUp>(); // Получить скрипт PickUp
+            var pup = coll.GetComponent<PickUp>(); // Получить скрипт PickUp
             if (pup == null) return;
 
             switch(pup.itemType)
             {
                 case PickUp.eType.health:
-                    health = Mathf.Min(health + 2, maxHealth);
+                    Health = Mathf.Min(Health + 2, maxHealth);
                     _aud.PlayOneShot(healthSn);
                     break;
                 case PickUp.eType.key:
@@ -335,33 +300,33 @@ namespace __Scripts
                     _aud.PlayOneShot(keySn);
                     break;  
                 case PickUp.eType.grappler:
-                    hasGrappler = true;
+                    hasGrapple = true;
                     _aud.PlayOneShot(upgradeSn);
                     break;
                 case PickUp.eType.upgrade_sword:
                     hasUpgradeSword = true;
                     _aud.PlayOneShot(upgradeSn);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
-            Destroy(colld.gameObject);
+            Destroy(coll.gameObject);
         }
 
         public void ResetInRoom(int healthLoss = 0)
         {
             transform.position = lastSafeLoc;
             facing = lastSafeFacing;
-            health -= healthLoss;
+            Health -= healthLoss;
             _aud.PlayOneShot(damageSn);
             _aud.PlayOneShot(fallSn);
             invincible = true; // Сделать Дрея неуязвимым
             _invincibleDone = Time.time + invincibleDuration;
-            if (health <= 0)
-            {
-                _aud.PlayOneShot(dieSn);
-                deathScreen.SetActive(true);
-                mode = eMode.dead;
-            }
+            if (Health > 0) return;
+            _aud.PlayOneShot(dieSn);
+            deathScreen.SetActive(true);
+            mode = EMode.dead;
         }
 
 
@@ -371,34 +336,25 @@ namespace __Scripts
             return facing;
         }
 
-        public bool Moving
-        {
-            get
-            {
-                return (mode == eMode.move);
-            }
-        }
+        public bool Moving => (mode == EMode.move);
 
         public float GetSpeed()
         {
             return speed;
         }
 
-        public float GridMult
-        {
-            get { return _inRm.gridMult; }
-        }
+        public float GridMult => _inRm.gridMult;
 
         public Vector2 RoomPos
         {
-            get { return _inRm.RoomPos; }
-            set { _inRm.RoomPos = value; }
+            get => _inRm.RoomPos;
+            set => _inRm.RoomPos = value;
         }
 
         public Vector2 RoomNum
         {
-            get { return _inRm.RoomNum; }
-            set { _inRm.RoomNum = value; }
+            get => _inRm.RoomNum;
+            set => _inRm.RoomNum = value;
         }
 
         public Vector2 GetRoomPosOnGrid(float mult = -1)
@@ -409,8 +365,8 @@ namespace __Scripts
         // Реализация интерфейса IKeyMaster
         public int KeyCount
         {
-            get { return numKeys; }
-            set { numKeys = value; }
+            get => numKeys;
+            set => numKeys = value;
         }
     }
 }

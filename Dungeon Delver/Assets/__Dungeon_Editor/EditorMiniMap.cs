@@ -81,15 +81,10 @@ namespace __Dungeon_Editor
             HighlightRoom();
         }
 
-        static public Sprite SPRITE_ON {
-            get { return S.spriteOn; }
-        }
-        static public Sprite SPRITE_OFF {
-            get { return S.spriteOff; }
-        }
-        static public Sprite SPRITE_GRAY {
-            get { return S.spriteGray; }
-        }
+        static public Sprite SPRITE_ON => S.spriteOn;
 
+        static public Sprite SPRITE_OFF => S.spriteOff;
+
+        static public Sprite SPRITE_GRAY => S.spriteGray;
     }
 }

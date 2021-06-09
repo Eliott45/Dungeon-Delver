@@ -32,7 +32,7 @@ namespace __Dungeon_Editor
 
         private int[,]          roomClipboard;
 
-        private EditorTile[,]   roomTiles = new EditorTile[roomW,roomH];
+        private readonly EditorTile[,]   roomTiles = new EditorTile[roomW,roomH];
 
         // Use this for initialization
         void Awake() {
@@ -177,14 +177,14 @@ namespace __Dungeon_Editor
         }
 
         public int roomX {
-            get { return _roomX; }
+            get => _roomX;
             set {
                 _roomX = Mathf.Clamp(value, 0, mapSize-1);
                 ShowRoom();
             }
         }
         public int roomY {
-            get { return _roomY; }
+            get => _roomY;
             set {
                 _roomY = Mathf.Clamp(value, 0, mapSize-1);
                 ShowRoom();
@@ -281,15 +281,11 @@ namespace __Dungeon_Editor
             ROOM_HAS_CONTENT[x,y] = b;
         }
 
-        static public int ROOM_X {
-            get { return S.roomX; }
-        }
-        static public int ROOM_Y {
-            get { return S.roomY; }
-        }
-        static public Vector2 ROOM {
-            get { return new Vector2( S.roomX, S.roomY ); }
-        }
+        static public int ROOM_X => S.roomX;
+
+        static public int ROOM_Y => S.roomY;
+
+        static public Vector2 ROOM => new Vector2( S.roomX, S.roomY );
 
         static public void ChangeTile(EditorTile et) {
             if (!mapLoaded) return;
@@ -306,14 +302,11 @@ namespace __Dungeon_Editor
             EditorTileSelection.SELECTED_TILE = ndx;
         }
 
-        static public int ROOM_H {
-            get { return roomH; }
-        }
-        static public int ROOM_W {
-            get { return roomW; }
-        }
+        static public int ROOM_H => roomH;
 
-//    static public void COPY_ROOM() {
+        static public int ROOM_W => roomW;
+
+        //    static public void COPY_ROOM() {
 //        S.CopyRoom();
 //    }
 //    static public void PASTE_ROOM() {

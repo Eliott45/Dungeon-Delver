@@ -22,7 +22,7 @@ namespace __Dungeon_Editor
         }
 
         public Sprite sprite {
-            get { return img.sprite; }
+            get => img.sprite;
             set {
                 if (img.sprite != value) {
                     img.sprite = value;
