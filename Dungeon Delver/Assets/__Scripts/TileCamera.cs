@@ -140,7 +140,7 @@ namespace __Scripts
                 {
                     if (e != null)
                     {
-                        e.guranteedItemDrop = ts.guranteedItemDrop;
+                        e.guaranteedItemDrop = ts.guranteedItemDrop;
                     }
                 }
             }

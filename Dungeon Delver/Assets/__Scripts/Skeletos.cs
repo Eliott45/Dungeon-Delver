@@ -28,7 +28,7 @@ namespace __Scripts
             if (stun) // Если скелет под эфектом шока
             {
                 speed = 0;
-                rigid.velocity = directions[facing] * speed;
+                rigid.velocity = Directions[facing] * speed;
                 return;
             } else
             {
@@ -40,7 +40,7 @@ namespace __Scripts
                 DecideDirection(); // Решить куда двигаться дальше
             }
 
-            rigid.velocity = directions[facing] * speed;  // Поле rigid унаследовано от класса Enemy и инициализируется в Enemy.Awake()
+            rigid.velocity = Directions[facing] * speed;  // Поле rigid унаследовано от класса Enemy и инициализируется в Enemy.Awake()
         }
 
         /// <summary>

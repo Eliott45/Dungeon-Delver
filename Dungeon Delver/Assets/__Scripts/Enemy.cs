@@ -4,41 +4,41 @@ namespace __Scripts
 {
     public class Enemy : MonoBehaviour
     {
-        protected static Vector3[] directions = new Vector3[]
+        protected static readonly Vector3[] Directions = 
         {
             Vector3.right, Vector3.up, Vector3.left, Vector3.down
         };
 
         [Header("Set in Inspector: Enemy")]
-        public float maxHealth = 1;
-        public float knockbackSpeed = 10;
-        public float knockbackDuration = 0.25f;
-        public float invincibleDuration = 0.5f;
-        public float stunDuration = 1f;
-        public float dieDuration = 1f;
-        public GameObject[] randomItemDrops;
-        public GameObject guranteedItemDrop = null;
+        [SerializeField] private float maxHealth = 1;
+        [SerializeField] private float knockbackSpeed = 10;
+        [SerializeField] private float knockbackDuration = 0.25f;
+        [SerializeField] private float invincibleDuration = 0.5f;
+        [SerializeField] private float stunDuration = 1f;
+        [SerializeField] private float dieDuration = 1f;
+        [SerializeField] private GameObject[] randomItemDrops;
+        public GameObject guaranteedItemDrop;
 
         [Header("Set in Inspector: Enemy sounds")]
-        public AudioClip damageReceivedSn;
-        public AudioClip dieSn;
+        [SerializeField] private AudioClip damageReceivedSn;
+        [SerializeField] private AudioClip dieSn;
 
         [Header("Set Dynamically: Enemy")]
-        public float health;
-        public bool invincible = false;
-        public bool knockback = false;
-        public bool stun = false; // Наличие шока (оглушение)
-        public bool dead = false;
+        [SerializeField] private float health;
+        public bool invincible;
+        public bool knockback;
+        public bool stun; // Наличие шока (оглушение)
 
-        private float _stunDone = 0;
-        private float _invincibleDone = 0;
-        private float _knockbackDone = 0;
+        private float _stunDone;
+        private float _invincibleDone;
+        private float _knockbackDone;
         public Vector3 knockbackVel;
 
         protected Animator anim;
         protected Rigidbody rigid;
-        protected SpriteRenderer sRend;
-        protected AudioSource aud;
+        
+        private SpriteRenderer sRend;
+        private AudioSource aud;
 
         protected virtual void Awake()
         {
@@ -73,11 +73,11 @@ namespace __Scripts
             anim.speed = 1;
         }
 
-        private void OnTriggerEnter(Collider colld)
+        private void OnTriggerEnter(Collider coll)
         {
             if (invincible) return; // Выйти, если скелет пока неуязвим
             if (stun) return;
-            DamageEffect dEf = colld.gameObject.GetComponent<DamageEffect>(); // Получить из объекта скрипт DamageEffect
+            var dEf = coll.gameObject.GetComponent<DamageEffect>(); // Получить из объекта скрипт DamageEffect
 
             if (dEf == null) return; // Если компонент DamageEffect отсуствует - выйти
 
@@ -97,54 +97,52 @@ namespace __Scripts
                 GetComponent<SphereCollider>().enabled = false;
                 invincible = true;
                 knockback = true;
-                Invoke("Die", dieDuration);
+                Invoke(nameof(Die), dieDuration);
                 return;
             }
             invincible = true; // Сделать врага неуязвимым 
             _invincibleDone = Time.time + invincibleDuration;
 
-            if (dEf.knockback) // Выполнить отбрасывание
+            if (!dEf.knockback) return;
+            // Определить направление отбрасывания
+            var delta = transform.position - coll.transform.position;
+            if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
             {
-                // Определить направление отбрасывания
-                Vector3 delta = transform.position - colld.transform.position;
-                if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
-                {
-                    // Отбрасывание по горизонтали
-                    delta.x = (delta.x > 0) ? 1 : -1;
-                    delta.y = 0;
-                }
-                else
-                {
-                    // Отбрасывание по вертикали
-                    delta.x = 0;
-                    delta.y = (delta.y > 0) ? 1 : -1;
-                }
-
-                // Применить скорость отскока к компоненту Rigidbody
-                knockbackVel = delta * knockbackSpeed;
-                rigid.velocity = knockbackVel;
-
-                // Установить режим knockback и время прекращения отбрасывания
-                knockback = true;
-                _knockbackDone = Time.time + knockbackDuration;
-                anim.speed = 0;
+                // Отбрасывание по горизонтали
+                delta.x = (delta.x > 0) ? 1 : -1;
+                delta.y = 0;
             }
+            else
+            {
+                // Отбрасывание по вертикали
+                delta.x = 0;
+                delta.y = (delta.y > 0) ? 1 : -1;
+            }
+
+            // Применить скорость отскока к компоненту Rigidbody
+            knockbackVel = delta * knockbackSpeed;
+            rigid.velocity = knockbackVel;
+
+            // Установить режим knockback и время прекращения отбрасывания
+            knockback = true;
+            _knockbackDone = Time.time + knockbackDuration;
+            anim.speed = 0;
         }
 
-        void Die()
+        private void Die()
         {
             GameObject go;
-            if(guranteedItemDrop != null)
+            if(guaranteedItemDrop != null)
             {
-                go = Instantiate<GameObject>(guranteedItemDrop);
+                go = Instantiate(guaranteedItemDrop);
                 go.transform.position = transform.position;
             } else if (randomItemDrops.Length > 0)
             {
-                int n = Random.Range(0, randomItemDrops.Length);
-                GameObject prefab = randomItemDrops[n];
+                var n = Random.Range(0, randomItemDrops.Length);
+                var prefab = randomItemDrops[n];
                 if (prefab != null)
                 {
-                    go = Instantiate<GameObject>(prefab);
+                    go = Instantiate(prefab);
                     go.transform.position = transform.position;
                 }
             }
