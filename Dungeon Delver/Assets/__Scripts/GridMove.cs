@@ -1,54 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class GridMove : MonoBehaviour
+namespace __Scripts
 {
-    private IFacingMover _mover;
-
-    private void Awake()
+    public class GridMove : MonoBehaviour
     {
-        _mover = GetComponent<IFacingMover>();
-    }
+        private IFacingMover _mover;
 
-    private void FixedUpdate()
-    {
-        if (!_mover.Moving) return; // Если объект не перемещается, выйти
-        int facing = _mover.GetFacing();
-
-        // Если объект перемещается, применить выравнивание по сетке
-        // Cначала получить координаты ближайшего узла сетки
-        Vector2 rPos = _mover.RoomPos;
-        Vector2 rPosGrid = _mover.GetRoomPosOnGrid();
-        // Этот код полагается на интерфейс который использует InRoom для определения шага сетки
-
-        // Затем подвинуть объект в сторону линии сетки
-        float delta = 0;
-        if(facing == 0 || facing == 2)
+        private void Awake()
         {
-            // Движени по горизонатали, выравнивание по оси y
-            delta = rPosGrid.y - rPos.y;
-        } else
-        {
-            // Движение по вертикали, выравнивание по оси х
-            delta = rPosGrid.x - rPos.x;
-        }
-        if (delta == 0) return; // Объект уже выровнен по сетке
-
-        float move = _mover.GetSpeed() * Time.fixedDeltaTime;
-        move = Mathf.Min(move, Mathf.Abs(delta));
-        if (delta < 0) move = -move;
-
-        if(facing == 0 || facing ==2)
-        {
-            // Движени по горизонатали, выравнивание по оси y
-            rPos.y += move;
-        } else
-        {
-            // Движение по вертикали, выравнивание по оси х
-            rPos.x += move;
+            _mover = GetComponent<IFacingMover>();
         }
 
-        _mover.RoomPos = rPos;
+        private void FixedUpdate()
+        {
+            if (!_mover.Moving) return; // Если объект не перемещается, выйти
+            var facing = _mover.GetFacing();
+
+            // Если объект перемещается, применить выравнивание по сетке
+            // Cначала получить координаты ближайшего узла сетки
+            Vector2 rPos = _mover.RoomPos;
+            Vector2 rPosGrid = _mover.GetRoomPosOnGrid();
+            // Этот код полагается на интерфейс который использует InRoom для определения шага сетки
+
+            // Затем подвинуть объект в сторону линии сетки
+            float delta = 0;
+            if(facing == 0 || facing == 2)
+            {
+                // Движени по горизонатали, выравнивание по оси y
+                delta = rPosGrid.y - rPos.y;
+            } else
+            {
+                // Движение по вертикали, выравнивание по оси х
+                delta = rPosGrid.x - rPos.x;
+            }
+            if (delta == 0) return; // Объект уже выровнен по сетке
+
+            var move = _mover.GetSpeed() * Time.fixedDeltaTime;
+            move = Mathf.Min(move, Mathf.Abs(delta));
+            if (delta < 0) move = -move;
+
+            if(facing == 0 || facing ==2)
+            {
+                // Движени по горизонатали, выравнивание по оси y
+                rPos.y += move;
+            } else
+            {
+                // Движение по вертикали, выравнивание по оси х
+                rPos.x += move;
+            }
+
+            _mover.RoomPos = rPos;
+        }
     }
 }

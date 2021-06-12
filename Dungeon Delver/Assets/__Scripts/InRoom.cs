@@ -1,102 +1,101 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class InRoom : MonoBehaviour
+namespace __Scripts
 {
-    static public float ROOM_W = 16; // Ширина комнаты
-    static public float ROOM_H = 11; // Высота комнаты
-    static public float WALL_T = 2;  // Толщина стен
-
-    // Максимальный размер карты
-    static public int MAX_RM_X = 9;
-    static public int MAX_RM_Y = 9;
-
-    /// <summary>
-    /// Хранит информацию об относительном расположении дверей
-    /// </summary>
-    static public Vector2[] DOORS = new Vector2[]
+    public class InRoom : MonoBehaviour
     {
-        new Vector2(14, 5),
-        new Vector2(7.5f, 9),
-        new Vector2(1, 5),
-        new Vector2(7.5f, 1)
-    };
+        public static float ROOM_W = 16; // Ширина комнаты
+        public static float ROOM_H = 11; // Высота комнаты
+        public static float WALL_T = 2;  // Толщина стен
 
-    [Header("Set in Inspector")]
-    public bool keepInRoom = true;
-    public float gridMult = 1;
+        // Максимальный размер карты
+        public static int MAX_RM_X = 9;
+        public static int MAX_RM_Y = 9;
 
-    private void LateUpdate()
-    {
-        if(keepInRoom)
+        /// <summary>
+        /// Хранит информацию об относительном расположении дверей
+        /// </summary>
+        public static Vector2[] DOORS = new Vector2[]
         {
-            Vector2 rPos = RoomPos;
+            new Vector2(14, 5),
+            new Vector2(7.5f, 9),
+            new Vector2(1, 5),
+            new Vector2(7.5f, 1)
+        };
+
+        [Header("Set in Inspector")]
+        public bool keepInRoom = true;
+        public float gridMult = 1;
+
+        private void LateUpdate()
+        {
+            if (!keepInRoom) return;
+            var rPos = RoomPos;
             // Mathf.Clamp - гарантирует, что координата будет иметь значение между минимальным значением WALL_T и максимальным значеним ROOM_W - 1 - WALL_T
             rPos.x = Mathf.Clamp(rPos.x, WALL_T, ROOM_W - 1 - WALL_T); 
             rPos.y = Mathf.Clamp(rPos.y, WALL_T, ROOM_H - 1 - WALL_T);
             RoomPos = rPos;
         }
-    }
 
-    /// <summary>
-    /// Узнать местоположение этого персонажа в локальных координатах комнаты.
-    /// </summary>
-    public Vector2 RoomPos
-    {
-        get
+        /// <summary>
+        /// Узнать местоположение этого персонажа в локальных координатах комнаты.
+        /// </summary>
+        public Vector2 RoomPos
         {
-            Vector2 tPos = transform.position;
-            tPos.x %= ROOM_W;
-            tPos.y %= ROOM_H;
-            return tPos;
+            get
+            {
+                Vector2 tPos = transform.position;
+                tPos.x %= ROOM_W;
+                tPos.y %= ROOM_H;
+                return tPos;
+            }
+            set
+            {
+                Vector2 rm = RoomNum;
+                rm.x *= ROOM_W;
+                rm.y *= ROOM_H;
+                rm += value;
+                transform.position = rm;
+            }
         }
-        set
-        {
-            Vector2 rm = RoomNum;
-            rm.x *= ROOM_W;
-            rm.y *= ROOM_H;
-            rm += value;
-            transform.position = rm;
-        }
-    }
 
-    /// <summary>
-    /// Узнать в какой комнате находится этот персонаж.
-    /// </summary>
-    public Vector2 RoomNum
-    {
-        get
+        /// <summary>
+        /// Узнать в какой комнате находится этот персонаж.
+        /// </summary>
+        public Vector2 RoomNum
         {
-            Vector2 tPos = transform.position;
-            tPos.x = Mathf.Floor(tPos.x / ROOM_W);
-            tPos.y = Mathf.Floor(tPos.y / ROOM_H);
-            return tPos;
+            get
+            {
+                Vector2 tPos = transform.position;
+                tPos.x = Mathf.Floor(tPos.x / ROOM_W);
+                tPos.y = Mathf.Floor(tPos.y / ROOM_H);
+                return tPos;
+            }
+            set
+            {
+                Vector2 rPos = RoomPos;
+                Vector2 rm = value;
+                rm.x *= ROOM_W;
+                rm.y *= ROOM_H;
+                transform.position = rm + rPos;
+            }
         }
-        set
-        {
-            Vector2 rPos = RoomPos;
-            Vector2 rm = value;
-            rm.x *= ROOM_W;
-            rm.y *= ROOM_H;
-            transform.position = rm + rPos;
-        }
-    }
 
-    /// <summary>
-    /// Вычисляет координаты узла сетки, ближайшего к данному персонажу
-    /// </summary>
-    public Vector2 GetRoomPosOnGrid(float mult = -1)
-    {
-        if(mult == -1)
+        /// <summary>
+        /// Вычисляет координаты узла сетки, ближайшего к данному персонажу
+        /// </summary>
+        public Vector2 GetRoomPosOnGrid(float mult = -1)
         {
-            mult = gridMult;
+            if(mult == -1)
+            {
+                mult = gridMult;
+            }
+            var rPos = RoomPos;
+            rPos /= mult;
+            rPos.x = Mathf.Round(rPos.x);
+            rPos.y = Mathf.Round(rPos.y);
+            rPos *= mult;
+            return rPos;
         }
-        Vector2 rPos = RoomPos;
-        rPos /= mult;
-        rPos.x = Mathf.Round(rPos.x);
-        rPos.y = Mathf.Round(rPos.y);
-        rPos *= mult;
-        return rPos;
     }
 }

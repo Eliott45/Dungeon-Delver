@@ -1,89 +1,90 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class GateKeeper : MonoBehaviour
+namespace __Scripts
 {
-    public AudioClip unlockDoorSd;
-
-    private AudioSource _aud;
-
-    //----- Иднексы плиток с запертыми дверьми
-    const int lockedR = 95;
-    const int lockedUR = 81;
-    const int lockedUL = 80;
-    const int lockedL = 100;
-    const int lockedDL = 101;
-    const int lockedDR = 102;
-
-    //----- Индексы плиток с открытыми дверьми
-    const int openR = 48;
-    const int openUR = 93;
-    const int openUL = 92;
-    const int openL = 51;
-    const int openDL = 26;
-    const int openDR = 27;
-
-    private IKeyMaster keys;
-
-    private void Awake()
+    public class GateKeeper : MonoBehaviour
     {
-        _aud = GetComponent<AudioSource>();
-        keys = GetComponent<IKeyMaster>();
-    }
+        public AudioClip unlockDoorSd;
 
-    private void OnCollisionStay(Collision coll)
-    {
-        // Если ключей нет, можно не продолжать
-        if (keys.KeyCount < 1) return;
+        private AudioSource _aud;
 
-        // Интерес представляют только плитки
-        Tile ti = coll.gameObject.GetComponent<Tile>();
-        if (ti == null) return;
+        //----- Иднексы плиток с запертыми дверьми
+        private const int LockedR = 95;
+        private const int LockedUr = 81;
+        private const int LockedUl = 80;
+        private const int LockedL = 100;
+        private const int LockedDL = 101;
+        private const int LockedDr = 102;
 
-        // Открывать, только если дрей обращен лицом к двери (предотвратить случайно использованик ключа)
-        int facing = keys.GetFacing();
-        // Проверить, является ли плитка закрытой дверью
-        Tile ti2;
-        switch(ti.tileNum)
+        //----- Индексы плиток с открытыми дверьми
+        private const int OpenR = 48;
+        private const int OpenUr = 93;
+        private const int OpenUl = 92;
+        private const int OpenL = 51;
+        private const int OpenDL = 26;
+        private const int OpenDr = 27;
+
+        private IKeyMaster keys;
+
+        private void Awake()
         {
-            case lockedR:
-                if (facing != 0) return;
-                ti.SetTile(ti.x, ti.y, openR);
-                break;
-            case lockedUR:
-                if (facing != 1) return;
-                ti.SetTile(ti.x, ti.y, openUR);
-                ti2 = TileCamera.TILES[ti.x - 1, ti.y];
-                ti2.SetTile(ti2.x, ti2.y, openUL);
-                break;
-            case lockedUL:
-                if (facing != 1) return;
-                ti.SetTile(ti.x, ti.y, openUL);
-                ti2 = TileCamera.TILES[ti.x + 1, ti.y];
-                ti2.SetTile(ti2.x, ti2.y, openUR);
-                break;
-            case lockedL:
-                if (facing != 2) return;
-                ti.SetTile(ti.x, ti.y, openL);
-                break;
-            case lockedDL:
-                if (facing != 3) return;
-                ti.SetTile(ti.x, ti.y, openDL);
-                ti2 = TileCamera.TILES[ti.x + 1, ti.y];
-                ti2.SetTile(ti2.x, ti2.y, openDR);
-                break;
-            case lockedDR:
-                if (facing != 3) return;
-                ti.SetTile(ti.x, ti.y, openDR);
-                ti2 = TileCamera.TILES[ti.x - 1, ti.y];
-                ti2.SetTile(ti2.x, ti2.y, openDL);
-                break;
-            default:
-                return; // Выйти, чтобы исключить уменьшение счетчика ключей
+            _aud = GetComponent<AudioSource>();
+            keys = GetComponent<IKeyMaster>();
         }
-        _aud.PlayOneShot(unlockDoorSd);
-        keys.KeyCount--;
-    }
 
+        private void OnCollisionStay(Collision coll)
+        {
+            // Если ключей нет, можно не продолжать
+            if (keys.KeyCount < 1) return;
+
+            // Интерес представляют только плитки
+            var ti = coll.gameObject.GetComponent<Tile>();
+            if (ti == null) return;
+
+            // Открывать, только если дрей обращен лицом к двери (предотвратить случайно использованик ключа)
+            var facing = keys.GetFacing();
+            // Проверить, является ли плитка закрытой дверью
+            Tile ti2;
+            switch(ti.tileNum)
+            {
+                case LockedR:
+                    if (facing != 0) return;
+                    ti.SetTile(ti.x, ti.y, OpenR);
+                    break;
+                case LockedUr:
+                    if (facing != 1) return;
+                    ti.SetTile(ti.x, ti.y, OpenUr);
+                    ti2 = TileCamera.TILES[ti.x - 1, ti.y];
+                    ti2.SetTile(ti2.x, ti2.y, OpenUl);
+                    break;
+                case LockedUl:
+                    if (facing != 1) return;
+                    ti.SetTile(ti.x, ti.y, OpenUl);
+                    ti2 = TileCamera.TILES[ti.x + 1, ti.y];
+                    ti2.SetTile(ti2.x, ti2.y, OpenUr);
+                    break;
+                case LockedL:
+                    if (facing != 2) return;
+                    ti.SetTile(ti.x, ti.y, OpenL);
+                    break;
+                case LockedDL:
+                    if (facing != 3) return;
+                    ti.SetTile(ti.x, ti.y, OpenDL);
+                    ti2 = TileCamera.TILES[ti.x + 1, ti.y];
+                    ti2.SetTile(ti2.x, ti2.y, OpenDr);
+                    break;
+                case LockedDr:
+                    if (facing != 3) return;
+                    ti.SetTile(ti.x, ti.y, OpenDr);
+                    ti2 = TileCamera.TILES[ti.x - 1, ti.y];
+                    ti2.SetTile(ti2.x, ti2.y, OpenDL);
+                    break;
+                default:
+                    return; // Выйти, чтобы исключить уменьшение счетчика ключей
+            }
+            _aud.PlayOneShot(unlockDoorSd);
+            keys.KeyCount--;
+        }
+
+    }
 }

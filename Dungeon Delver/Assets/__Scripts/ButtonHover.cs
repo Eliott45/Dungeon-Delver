@@ -1,31 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+namespace __Scripts
 {
-    public Color hoverColor;
-
-    private Text text;
-    private Color standard;
-
-    private void Awake()
+    public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        text = GetComponent<Text>();
-        standard = text.color;
-    }
+        [SerializeField] private Color hoverColor;
+
+        private Text text;
+        private Color standard;
+
+        private void Awake()
+        {
+            text = GetComponent<Text>();
+            standard = text.color;
+        }
 
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        text.color = hoverColor;
-    }
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            text.color = hoverColor;
+        }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        text.color = standard;
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            text.color = standard;
+        }
     }
 }
