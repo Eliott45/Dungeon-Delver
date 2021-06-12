@@ -291,19 +291,19 @@ namespace __Scripts
 
             switch(pup.itemType)
             {
-                case PickUp.eType.health:
+                case PickUp.EType.health:
                     Health = Mathf.Min(Health + 2, maxHealth);
                     _aud.PlayOneShot(healthSn);
                     break;
-                case PickUp.eType.key:
+                case PickUp.EType.key:
                     KeyCount++;
                     _aud.PlayOneShot(keySn);
                     break;  
-                case PickUp.eType.grappler:
+                case PickUp.EType.grappler:
                     hasGrapple = true;
                     _aud.PlayOneShot(upgradeSn);
                     break;
-                case PickUp.eType.upgrade_sword:
+                case PickUp.EType.upgradeSword:
                     hasUpgradeSword = true;
                     _aud.PlayOneShot(upgradeSn);
                     break;

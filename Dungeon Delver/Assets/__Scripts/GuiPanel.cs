@@ -7,31 +7,29 @@ namespace __Scripts
     public class GuiPanel : MonoBehaviour
     {
         [Header("Set in Inspector")]
-        public Dray dray;
-        public Sprite healthEmpty;
-        public Sprite healthHalf;
-        public Sprite healthFull;
+        [SerializeField] private Dray dray;
+        [SerializeField] private Sprite healthEmpty;
+        [SerializeField] private Sprite healthHalf;
+        [SerializeField] private Sprite healthFull;
 
-        Text keyCountText;
-        List<Image> healthImages;
+        private Text keyCountText;
+        private List<Image> healthImages;
 
         private void Start()
         {
             // Счетчик ключей
-            Transform trans = transform.Find("Key Count");
+            var trans = transform.Find("Key Count");
             keyCountText = trans.GetComponent<Text>();
 
             // Индикатор уровня здоровья
-            Transform healthPanel = transform.Find("Health Panel");
+            var healthPanel = transform.Find("Health Panel");
             healthImages = new List<Image>();
-            if(healthPanel != null)
+            if (healthPanel == null) return;
+            for (var i = 0; i < 20; i++)
             {
-                for (int i = 0; i < 20; i++)
-                {
-                    trans = healthPanel.Find("H_" + i);
-                    if (trans == null) break;
-                    healthImages.Add(trans.GetComponent<Image>());
-                }
+                trans = healthPanel.Find("H_" + i);
+                if (trans == null) break;
+                healthImages.Add(trans.GetComponent<Image>());
             }
         }
 
@@ -41,18 +39,18 @@ namespace __Scripts
             keyCountText.text = dray.numKeys.ToString();
 
             // Показать уровень здоровья
-            int health = dray.Health;
-            for (int i = 0; i < healthImages.Count; i++)
+            var health = dray.Health;
+            foreach (var t in healthImages)
             {
                 if(health > 1)
                 {
-                    healthImages[i].sprite = healthFull;
+                    t.sprite = healthFull;
                 } else if(health == 1)
                 {
-                    healthImages[i].sprite = healthHalf;
+                    t.sprite = healthHalf;
                 } else
                 {
-                    healthImages[i].sprite = healthEmpty;
+                    t.sprite = healthEmpty;
                 }
                 health -= 2;
             }

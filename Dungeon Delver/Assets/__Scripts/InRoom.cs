@@ -4,18 +4,18 @@ namespace __Scripts
 {
     public class InRoom : MonoBehaviour
     {
-        static public float ROOM_W = 16; // Ширина комнаты
-        static public float ROOM_H = 11; // Высота комнаты
-        static public float WALL_T = 2;  // Толщина стен
+        public static float ROOM_W = 16; // Ширина комнаты
+        public static float ROOM_H = 11; // Высота комнаты
+        public static float WALL_T = 2;  // Толщина стен
 
         // Максимальный размер карты
-        static public int MAX_RM_X = 9;
-        static public int MAX_RM_Y = 9;
+        public static int MAX_RM_X = 9;
+        public static int MAX_RM_Y = 9;
 
         /// <summary>
         /// Хранит информацию об относительном расположении дверей
         /// </summary>
-        static public Vector2[] DOORS = new Vector2[]
+        public static Vector2[] DOORS = new Vector2[]
         {
             new Vector2(14, 5),
             new Vector2(7.5f, 9),
@@ -29,14 +29,12 @@ namespace __Scripts
 
         private void LateUpdate()
         {
-            if(keepInRoom)
-            {
-                Vector2 rPos = RoomPos;
-                // Mathf.Clamp - гарантирует, что координата будет иметь значение между минимальным значением WALL_T и максимальным значеним ROOM_W - 1 - WALL_T
-                rPos.x = Mathf.Clamp(rPos.x, WALL_T, ROOM_W - 1 - WALL_T); 
-                rPos.y = Mathf.Clamp(rPos.y, WALL_T, ROOM_H - 1 - WALL_T);
-                RoomPos = rPos;
-            }
+            if (!keepInRoom) return;
+            var rPos = RoomPos;
+            // Mathf.Clamp - гарантирует, что координата будет иметь значение между минимальным значением WALL_T и максимальным значеним ROOM_W - 1 - WALL_T
+            rPos.x = Mathf.Clamp(rPos.x, WALL_T, ROOM_W - 1 - WALL_T); 
+            rPos.y = Mathf.Clamp(rPos.y, WALL_T, ROOM_H - 1 - WALL_T);
+            RoomPos = rPos;
         }
 
         /// <summary>
@@ -92,7 +90,7 @@ namespace __Scripts
             {
                 mult = gridMult;
             }
-            Vector2 rPos = RoomPos;
+            var rPos = RoomPos;
             rPos /= mult;
             rPos.x = Mathf.Round(rPos.x);
             rPos.y = Mathf.Round(rPos.y);

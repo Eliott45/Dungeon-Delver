@@ -4,7 +4,7 @@ namespace __Scripts
 {
     public class SwordController : MonoBehaviour
     {
-        public GameObject prefabSword;
+        [SerializeField] private GameObject prefabSword;
 
         private GameObject _sword;
         private GameObject _upgradeSword;
@@ -24,16 +24,14 @@ namespace __Scripts
             transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);
             _sword.SetActive(_dray.mode == Dray.EMode.attack);
             _upgradeSword.SetActive(_dray.mode == Dray.EMode.attack2);
-            if (_dray.mode == Dray.EMode.attack2 && !_dray.droppingSwords)
-            {
-                DropSword();
-                _dray.droppingSwords = true;
-            }
+            if (_dray.mode != Dray.EMode.attack2 || _dray.droppingSwords) return;
+            DropSword();
+            _dray.droppingSwords = true;
         }
 
-        void DropSword()
+        private void DropSword()
         {
-            GameObject go = Instantiate(prefabSword);
+            var go = Instantiate(prefabSword);
             go.transform.position = _dray.transform.position;
             go.GetComponent<SwordProjectile>().direction = _dray.facing;
             go.transform.rotation = Quaternion.Euler(0, 0, 90 * _dray.facing);

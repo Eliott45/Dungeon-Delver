@@ -10,21 +10,21 @@ namespace __Scripts
         /// <summary>
         /// Тип предмета.
         /// </summary>
-        public enum eType { key, health, grappler, upgrade_sword}
+        public enum EType { key, health, grappler, upgradeSword}
 
-        public static float COLLIDER_DELAY = 0.5f;
+        private static float COLLIDER_DELAY = 0.5f;
 
         [Header("Set in Inspector")]
-        public eType itemType; // Установить тип предмета
+        public EType itemType; // Установить тип предмета
 
         // Awake() и Activate() деактивируют коллайдер на 0.5 секунд
         private void Awake()
         {
             GetComponent<Collider>().enabled = false;
-            Invoke("Activate", COLLIDER_DELAY);
+            Invoke(nameof(Activate), COLLIDER_DELAY);
         }
 
-        void Activate()
+        private void Activate()
         {
             GetComponent<Collider>().enabled = true;
         }

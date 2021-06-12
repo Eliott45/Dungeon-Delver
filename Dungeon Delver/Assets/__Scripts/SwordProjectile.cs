@@ -4,14 +4,15 @@ namespace __Scripts
 {
     public class SwordProjectile : MonoBehaviour
     {
-        protected static Vector3[] directions = new Vector3[]{
+        private static readonly Vector3[] Directions = {
             Vector3.right, Vector3.up, Vector3.left, Vector3.down
         };
 
-        public float speed = 3f;
+        [SerializeField] private float speed = 5f;
         public int direction;
-        public float flyDuration = 1f;
-        public float flyDone;
+        [SerializeField] private float flyDuration = 1.5f;
+        [SerializeField] private float flyDone;
+        
         private Vector3 _range;
         private int _cells = 0;
         private Rigidbody _rigid;
@@ -25,7 +26,7 @@ namespace __Scripts
 
         private void Update()
         {
-            _rigid.velocity = directions[direction] * speed;
+            _rigid.velocity = Directions[direction] * speed;
         }
 
         private void LateUpdate()
@@ -39,7 +40,7 @@ namespace __Scripts
         private void OnTriggerEnter(Collider colld)
         {
             _cells++;
-            DamageEffect dEf = colld.gameObject.GetComponent<DamageEffect>(); // Получить из объекта скрипт DamageEffect
+            var dEf = colld.gameObject.GetComponent<DamageEffect>(); // Получить из объекта скрипт DamageEffect
 
             if (dEf == null) return;
 

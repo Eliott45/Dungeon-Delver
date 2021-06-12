@@ -6,20 +6,20 @@ namespace __Scripts
 {
     public class Grapple : MonoBehaviour
     {
-        public enum eMode { none, gOut, gInMiss, gInHit}
+        private enum EMode { none, gOut, gInMiss, gInHit}
 
         [Header("Set in Inspector")]
-        public float grappleSpd = 10; // Скорость крюка
-        public float grappleLength = 7;
-        public float grappleInLength = 0.5f;
-        public int unsafeTileHealthPenalty = 2;
-        public TextAsset mapGrappleable;
+        [SerializeField] private float grappleSpd = 10; // Скорость крюка
+        [SerializeField] private float grappleLength = 7;
+        [SerializeField] private float grappleInLength = 0.5f;
+        [SerializeField] private int unsafeTileHealthPenalty = 2;
+        [SerializeField] private TextAsset mapGrappleable;
 
         [Header("Set Dynamically")]
-        public eMode mode = eMode.none;
+        [SerializeField] private EMode mode = EMode.none;
         // Номера плиток, на которые можно забросить крюк
-        public List<int> grappleTiles;
-        public List<int> unsafeTiles;
+        [SerializeField] private List<int> grappleTiles;
+        [SerializeField] private List<int> unsafeTiles;
 
         private Dray dray;
         private Rigidbody rigid;
@@ -38,11 +38,11 @@ namespace __Scripts
 
         private void Awake()
         {
-            string gTiles = mapGrappleable.text;
+            var gTiles = mapGrappleable.text;
             gTiles = Utils.RemoveLineEndings(gTiles);
             grappleTiles = new List<int>();
             unsafeTiles = new List<int>();
-            for (int i = 0; i <gTiles.Length; i++)
+            for (var i = 0; i <gTiles.Length; i++)
             {
                 switch (gTiles[i])
                 {
@@ -60,7 +60,7 @@ namespace __Scripts
             anim = GetComponent<Animator>();
             drayColld = GetComponent<Collider>();
 
-            Transform trans = transform.Find("Grappler");
+            var trans = transform.Find("Grappler");
             grapHead = trans.gameObject;
             grapLine = grapHead.GetComponent<LineRenderer>();
             grapHead.SetActive(false);
@@ -72,7 +72,7 @@ namespace __Scripts
 
             switch(mode)
             {
-                case eMode.none:
+                case EMode.none:
                     // Если нажата клавиша применения крюка
                     if (Input.GetKeyDown(KeyCode.X))
                     {
@@ -82,7 +82,7 @@ namespace __Scripts
             }
         }
 
-        void StartGrapple()
+        private void StartGrapple()
         {
             facing = dray.GetFacing();
             dray.enabled = false;
@@ -100,15 +100,15 @@ namespace __Scripts
             grapLine.positionCount = 2;
             grapLine.SetPosition(0, p0);
             grapLine.SetPosition(1, p1);
-            mode = eMode.gOut;
+            mode = EMode.gOut;
         }
 
         private void FixedUpdate()
         {
             switch (mode)
             {
-                case eMode.gOut: // Крюк брошен
-                    p1 += directions[facing] * grappleSpd * Time.fixedDeltaTime;
+                case EMode.gOut: // Крюк брошен
+                    p1 += directions[facing] * (grappleSpd * Time.fixedDeltaTime);
                     grapHead.transform.position = p1;
                     grapLine.SetPosition(1, p1);
 
@@ -117,18 +117,18 @@ namespace __Scripts
                     if (grappleTiles.IndexOf(tileNum) != -1)
                     {
                         // Крюк попал на плитку, за которую можно зацепиться!
-                        mode = eMode.gInHit;
+                        mode = EMode.gInHit;
                         break;
                     }
                     if ( (p1-p0).magnitude >= grappleLength)
                     {
                         // Крюк улетел на всю длину веревки, но никуда не попал
-                        mode = eMode.gInMiss;
+                        mode = EMode.gInMiss;
                     }
                     break;
 
-                case eMode.gInMiss: // Игрок промахнулся, вернуть крюк на удвоенной скорости
-                    p1 -= directions[facing] * 2 * grappleSpd * Time.fixedDeltaTime;
+                case EMode.gInMiss: // Игрок промахнулся, вернуть крюк на удвоенной скорости
+                    p1 -= directions[facing] * (2 * grappleSpd * Time.fixedDeltaTime);
                     if ( Vector3.Dot( (p1-p0), directions[facing] ) > 0 )
                     {
                         // Крюк еще перед дреем
@@ -139,8 +139,8 @@ namespace __Scripts
                         StopGrapple();
                     }
                     break;
-                case eMode.gInHit: // Крюк зацепился, поднять дрея на стену
-                    float dist = grappleInLength + grappleSpd * Time.fixedDeltaTime;
+                case EMode.gInHit: // Крюк зацепился, поднять дрея на стену
+                    var dist = grappleInLength + grappleSpd * Time.fixedDeltaTime;
                     if (dist > (p1-p0).magnitude)
                     {
                         p0 = p1 - (directions[facing] * grappleInLength);
@@ -148,7 +148,7 @@ namespace __Scripts
                         StopGrapple();
                         break;
                     }
-                    p0 += directions[facing] * grappleSpd * Time.fixedDeltaTime;
+                    p0 += directions[facing] * (grappleSpd * Time.fixedDeltaTime);
                     transform.position = p0;
                     grapLine.SetPosition(0, p0);
                     grapHead.transform.position = p1;
@@ -156,14 +156,14 @@ namespace __Scripts
             }
         }
 
-        void StopGrapple()
+        private void StopGrapple()
         {
             dray.enabled = true;
             drayColld.enabled = true;
 
             // Проверить безопасность плитки
-            int tileNum = TileCamera.GET_MAP(p0.x, p0.y);
-            if (mode == eMode.gInHit && unsafeTiles.IndexOf(tileNum) != -1)
+            var tileNum = TileCamera.GET_MAP(p0.x, p0.y);
+            if (mode == EMode.gInHit && unsafeTiles.IndexOf(tileNum) != -1)
             {
                 // Дрей попал не небезопасную плитку
                 dray.ResetInRoom(unsafeTileHealthPenalty);
@@ -171,15 +171,15 @@ namespace __Scripts
 
             grapHead.SetActive(false);
 
-            mode = eMode.none;
+            mode = EMode.none;
         }
 
         private void OnTriggerEnter(Collider colld)
         {
-            Enemy e = colld.GetComponent<Enemy>();
+            var e = colld.GetComponent<Enemy>();
             if (e == null) return;
 
-            mode = eMode.gInMiss;
+            mode = EMode.gInMiss;
         }
     }
 }

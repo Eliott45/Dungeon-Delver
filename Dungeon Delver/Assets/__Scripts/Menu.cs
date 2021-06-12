@@ -6,8 +6,8 @@ namespace __Scripts
     public class Menu : MonoBehaviour
     {
         [Header("Set in Inspector")]
-        public GameObject UIMenu;
-        public GameObject UIOptions;
+        [SerializeField] private GameObject UIMenu;
+        [SerializeField] private GameObject UIOptions;
 
 
         public void StartGame()

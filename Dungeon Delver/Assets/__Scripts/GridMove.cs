@@ -14,7 +14,7 @@ namespace __Scripts
         private void FixedUpdate()
         {
             if (!_mover.Moving) return; // Если объект не перемещается, выйти
-            int facing = _mover.GetFacing();
+            var facing = _mover.GetFacing();
 
             // Если объект перемещается, применить выравнивание по сетке
             // Cначала получить координаты ближайшего узла сетки
@@ -35,7 +35,7 @@ namespace __Scripts
             }
             if (delta == 0) return; // Объект уже выровнен по сетке
 
-            float move = _mover.GetSpeed() * Time.fixedDeltaTime;
+            var move = _mover.GetSpeed() * Time.fixedDeltaTime;
             move = Mathf.Min(move, Mathf.Abs(delta));
             if (delta < 0) move = -move;
 

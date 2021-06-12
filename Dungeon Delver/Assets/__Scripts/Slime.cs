@@ -5,13 +5,13 @@ namespace __Scripts
     public class Slime : Enemy, IFacingMover
     {
         [Header("Set in Inspector: Slime")]
-        public int speed = 1; // Скорость пермещение
-        public float timeThinkMin = 2f; // Минимальное время следущей смены направления
-        public float timeThinkMax = 4f; // Максимальное время следущей смены направления
+        [SerializeField] private int speed = 1; // Скорость пермещение
+        [SerializeField] private float timeThinkMin = 2f; // Минимальное время следущей смены направления
+        [SerializeField] private float timeThinkMax = 4f; // Максимальное время следущей смены направления
 
         [Header("Set Dynamically: Slime")]
-        public int facing = 0;
-        public float timeNextDecision = 0;
+        [SerializeField] private int facing;
+        [SerializeField] private float timeNextDecision;
 
         private InRoom _inRm;
 
@@ -21,7 +21,7 @@ namespace __Scripts
             _inRm = GetComponent<InRoom>();
         }
 
-        override protected void Update()
+        protected override void Update()
         {
             base.Update();
             if (knockback) return; // Если скелет неуязвим 
@@ -48,7 +48,7 @@ namespace __Scripts
         /// <summary>
         /// Выбирается случайное направление, и случайное время следующей смены направления
         /// </summary>
-        void DecideDirection()
+        private void DecideDirection()
         {
             facing = Random.Range(0, 4); // Случайное направление
             timeNextDecision = Time.time + Random.Range(timeThinkMin, timeThinkMax); // Случайное время следующей смены направления

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using __Scripts.ProtoTools;
 using UnityEngine;
 
@@ -18,12 +19,12 @@ namespace __Scripts
     /// </summary>
     public class TileCamera : MonoBehaviour
     {
-        static private int W, H;
-        static private int[,] MAP;
-        static public Sprite[] SPRITES;
-        static public Transform TILE_ANCHOR;
-        static public Tile[,] TILES;
-        static public string COLLISIONS;
+        private static int W, H;
+        private static int[,] MAP;
+        public static Sprite[] SPRITES;
+        private static Transform TILE_ANCHOR;
+        public static Tile[,] TILES;
+        public static string COLLISIONS;
 
         [Header("Set in Inspector")]
         public TextAsset mapData;
@@ -46,29 +47,28 @@ namespace __Scripts
             LoadMap();
         }
 
-        public void LoadMap()
+        private void LoadMap()
         {
             // Создать TILE_ANCHOR. Он будет играть роль родителя для всех плиток Tile.
-            GameObject go = new GameObject("TILE_ANCHOR");
+            var go = new GameObject("TILE_ANCHOR");
             TILE_ANCHOR = go.transform;
 
             // Загрузить все спрайты из mapTiles
             SPRITES = Resources.LoadAll<Sprite>(mapTiles.name); // Изображение находится в папке Resources
 
             // Прочитать информацию для карты
-            string[] lines = mapData.text.Split('\n');
+            var lines = mapData.text.Split('\n');
             H = lines.Length;
-            string[] tileNums = lines[0].Split(' ');
+            var tileNums = lines[0].Split(' ');
             W = tileNums.Length;
 
-            System.Globalization.NumberStyles hexNum; // Используется для преобразования строк с двузначными шестнадцатеричыми кодами в целые числа
-            hexNum = System.Globalization.NumberStyles.HexNumber; 
+            const NumberStyles hexNum = System.Globalization.NumberStyles.HexNumber; 
             // Сохранить информациию для карты в двумерный массив для ускорения доступа
             MAP = new int[W, H];
-            for (int j = 0; j < H; j++)
+            for (var j = 0; j < H; j++)
             {
                 tileNums = lines[j].Split(' ');
-                for (int i = 0; i < W; i++)
+                for (var i = 0; i < W; i++)
                 {
                     if(tileNums[i] == "..")
                     {
@@ -89,52 +89,43 @@ namespace __Scripts
         /// <summary>
         /// Генерирует плитки сразу для всей карты.
         /// </summary>
-        void ShowMap()
+        private void ShowMap()
         {
             TILES = new Tile[W, H];
 
             // Просмотреть всю карту и создать плитки, где необходимо 
-            for (int j = 0; j < H; j++)
+            for (var j = 0; j < H; j++)
             {
-                for (int i = 0; i < W; i++)
+                for (var i = 0; i < W; i++)
                 {
-                    if (MAP[i,j] != 0)
-                    {
-                        Tile ti = Instantiate<Tile>(tilePrefab);
-                        ti.transform.SetParent(TILE_ANCHOR);
-                        ti.SetTile(i, j);
-                        TILES[i, j] = ti;
-                    }
+                    if (MAP[i, j] == 0) continue;
+                    var ti = Instantiate<Tile>(tilePrefab, TILE_ANCHOR, true);
+                    ti.SetTile(i, j);
+                    TILES[i, j] = ti;
                 }
             }
         }
 
-        void PrepareTileSwapDict()
+        private void PrepareTileSwapDict()
         {
             tileSwapDict = new Dictionary<int, TileSwap>();
-            foreach (TileSwap ts in tileSwaps)
+            foreach (var ts in tileSwaps)
             {
                 tileSwapDict.Add(ts.tileNum, ts);
             }
         }
 
-        void CheckTileSwaps(int i, int j)
+        private void CheckTileSwaps(int i, int j)
         {
-            int tNum = GET_MAP(i, j);
+            var tNum = GET_MAP(i, j);
             if (!tileSwapDict.ContainsKey(tNum)) return;
             // Мы можем заменить плитку
-            TileSwap ts = tileSwapDict[tNum];
+            var ts = tileSwapDict[tNum];
             if (ts.swapPrefab != null)
             {
-                GameObject go = Instantiate(ts.swapPrefab);
-                Enemy e = go.GetComponent<Enemy>();
-                if ( e != null)
-                {
-                    go.transform.SetParent(enemyAnchor);
-                } else
-                {
-                    go.transform.SetParent(itemAnchor);
-                }
+                var go = Instantiate(ts.swapPrefab);
+                var e = go.GetComponent<Enemy>();
+                go.transform.SetParent(e != null ? enemyAnchor : itemAnchor);
                 go.transform.position = new Vector3(i, j, 0);
                 if(ts.guranteedItemDrop != null)
                 {
@@ -146,19 +137,13 @@ namespace __Scripts
             }
 
             // Заменить другой плиткой 
-            if (ts.overrideTileNum == -1)
-            {
-                SET_MAP(i, j, defaultTileNum);
-            } else
-            {
-                SET_MAP(i, j, ts.overrideTileNum);
-            }
+            SET_MAP(i, j, ts.overrideTileNum == -1 ? defaultTileNum : ts.overrideTileNum);
         }
 
         /// <summary>
         /// Обеспечивает защищенный доступ для чтения MAP, предотвращая исключение IndexOutORangeSception.
         /// </summary>
-        static public int GET_MAP(int x, int y)
+        public static int GET_MAP(int x, int y)
         {
             if(x < 0 || x >= W || y < 0 || y>= H)
             {
@@ -170,17 +155,17 @@ namespace __Scripts
         /// <summary>
         /// Перегруженная float-версия GET_MAP()
         /// </summary>
-        static public int GET_MAP(float x, float y)
+        public static int GET_MAP(float x, float y)
         {
-            int tX = Mathf.RoundToInt(x);
-            int tY = Mathf.RoundToInt(y - 0.25f); // Это выражение учитывает сложную перспективу игры, когда верхняя половина тела персонажа игрока может находится за пределами плитки, но счиается, что он находится на этой плитке.
+            var tX = Mathf.RoundToInt(x);
+            var tY = Mathf.RoundToInt(y - 0.25f); // Это выражение учитывает сложную перспективу игры, когда верхняя половина тела персонажа игрока может находится за пределами плитки, но счиается, что он находится на этой плитке.
             return GET_MAP(tX, tY);
         }
 
         /// <summary>
         /// беспечивает защищенный доступ для записи MAP, предотвращая исключение IndexOutORangeSception.
         /// </summary>
-        static public void SET_MAP(int x, int y, int tNum)
+        public static void SET_MAP(int x, int y, int tNum)
         {
             if (x < 0 || x >= W || y < 0 || y >= H)
             {

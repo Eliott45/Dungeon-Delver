@@ -5,13 +5,13 @@ namespace __Scripts
     public class Skeletos : Enemy, IFacingMover
     {
         [Header("Set in Inspector: Skeletos")]
-        public int speed = 2; // Скорость пермещение
-        public float timeThinkMin = 1f; // Минимальное время следующей смены направления
-        public float timeThinkMax = 4f; // Максимальное время следующей смены направления
+        [SerializeField] private int speed = 2; // Скорость пермещение
+        [SerializeField] private float timeThinkMin = 1f; // Минимальное время следующей смены направления
+        [SerializeField] private float timeThinkMax = 4f; // Максимальное время следующей смены направления
 
         [Header("Set Dynamically: Skeletos")]
-        public int facing = 0; // Направление
-        public float timeNextDecision = 0;
+        [SerializeField] private int facing; // Направление
+        [SerializeField] private float timeNextDecision;
 
         private InRoom _inRm;
 
@@ -21,7 +21,7 @@ namespace __Scripts
             _inRm = GetComponent<InRoom>();
         }
 
-        override protected void Update()
+        protected override void Update()
         {
             base.Update();
             if (knockback) return; // Если скелет неуязвим 
@@ -35,7 +35,6 @@ namespace __Scripts
                 speed = 2;
             }
 
-
             if (Time.time >= timeNextDecision) { // Если время смены направление прошло
                 DecideDirection(); // Решить куда двигаться дальше
             }
@@ -46,7 +45,7 @@ namespace __Scripts
         /// <summary>
         /// Выбирается случайное направление, и случайное время следующей смены направления
         /// </summary>
-        void DecideDirection()
+        private void DecideDirection()
         {
             facing = Random.Range(0, 4); // Случайное направление
             timeNextDecision = Time.time + Random.Range(timeThinkMin, timeThinkMax); // Случайное время следующей смены направления
